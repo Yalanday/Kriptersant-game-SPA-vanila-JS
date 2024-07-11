@@ -6,7 +6,6 @@ export class ExpensesCarFieldView extends AbstractView {
   constructor(car = "Тапочки") {
     super();
     this.#car = car;
-
   }
 
   setCarFieldHandler(callback) {

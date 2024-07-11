@@ -6,14 +6,18 @@ import {dataCar} from "../mock/data-car";
 export default class ExpensesHeadFieldPresenter {
   #element = null;
   #container = null;
-  #dataUser = null;
+  #dataUser= null;
   #dataCar = dataCar;
+  #MinusAllMoney = null;
+  #setterCarForDataUser = null;
 
   #carSelectElement = null;
 
-  constructor(dataUser, container) {
+  constructor(dataUser, container, minusAllMoney, setterCarForDataUser) {
     this.#dataUser = dataUser;
     this.#container = container;
+    this.#MinusAllMoney = minusAllMoney;
+    this.#setterCarForDataUser = setterCarForDataUser;
   }
 
   init() {
@@ -23,7 +27,7 @@ export default class ExpensesHeadFieldPresenter {
   }
 
   #handleCarField = () => {
-    this.#carSelectElement = new CarSelectedView(this.#dataUser, this.#dataCar);
+    this.#carSelectElement = new CarSelectedView(this.#dataUser(), this.#dataCar);
     render(this.#carSelectElement, this.#container.element);
     this.#carSelectElement.setCarCloseBtnHandler(this.#handleCloseBtnCarSelect);
     this.#carSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectCar);
@@ -31,7 +35,6 @@ export default class ExpensesHeadFieldPresenter {
   }
 
   #handleCloseBtnCarSelect = () => {
-    console.log('6666666')
     remove(this.#carSelectElement);
     this.#element.setCarFieldHandler(this.#handleCarField);
   }
@@ -46,12 +49,16 @@ export default class ExpensesHeadFieldPresenter {
   };
 
   #handleSelectCar = (evt) => {
-    console.log(evt)
+
     remove(this.#carSelectElement);
     this.#element.setCarFieldHandler(this.#handleCarField);
-    let newElement = new ExpensesCarFieldView(evt);
+    let newElement = new ExpensesCarFieldView(evt.dataset.model);
     replace(newElement, this.#element);
     this.#element = newElement;
     this.#element.setCarFieldHandler(this.#handleCarField);
+    this.#MinusAllMoney(Number(evt.dataset.price));
+    this.#setterCarForDataUser('car', evt.dataset.model);
+    console.log(this.#dataUser())
+
   }
 }

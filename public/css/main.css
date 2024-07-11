@@ -37,6 +37,10 @@
     src: local('Open Sans ExtraBold'), local('OpenSans-ExtraBold'), url('../fonts/OpenSans-ExtraBold.woff2') format('woff2');
 }
 
+* {
+    box-sizing: border-box;
+}
+
 html {
     background: #121213 url('../images/background.png') no-repeat 60% 0;
     color: var(--text-color);
@@ -47,6 +51,7 @@ html {
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box;
 }
 
 .visually-hidden {
@@ -86,18 +91,27 @@ a:link {
 }
 
 .head-field {
+    max-height: 400px;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-
+    flex-wrap: wrap;
+    gap: 30px;
     border: 1px solid silver;
     padding: 20px;
+
+    background-image: url('../images/bitcoin-png.png');
+    background-size: 90% 90%;
+    background-repeat: no-repeat;
+    background-position: center;
+;
 }
 
 .header__container {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
+    padding-top: 20px;
 }
 
 .header__logo-rub {
@@ -250,13 +264,17 @@ a:link {
 .head-field__child-field {
     border: 1px solid var(--text-color);
     display: inline-block;
-    padding: 10px;
+    padding: 15px;
     line-height: 140%;
+    background-color: #121213;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .head-field__work-container,
 .head-field__expenses-container {
-    width: 26%;
+    width: 46%;
 }
 
 .head-field__child-field {
@@ -273,7 +291,7 @@ a:link {
     position: absolute;
     width: 400px;
     padding: 40px 20px;
-    height: 150px;
+    /*height: 150px;*/
     background: #121213;
     border: 1px solid silver;
     -webkit-box-shadow: 0 0 8px 3px rgba(184, 188, 191, 0.49);
@@ -289,13 +307,18 @@ a:link {
 }
 
 .work-select-field {
-    width: 25%;
+    width: 48.5%;
     cursor: pointer;
     transition: all .2s ease-out;
+    padding: 2px;
+    line-height: 100%;
+    color: black;
+    height: 103px;
 }
 
 .work-select-field:hover {
     scale: 1.1;
+    opacity: 1;
 }
 
 .head-field__close-work-select {
@@ -327,4 +350,9 @@ a:link {
 
 .head-field__child-field {
 
+}
+
+.head-field__select-title {
+    margin: 0;
+    text-align: center;
 }

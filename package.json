@@ -1,8 +1,8 @@
 {
-  "name": "cinemaddict",
+  "name": "criptersant",
   "version": "18.0.0",
   "private": true,
-  "description": "Проект «Киноман» от HTML Academy",
+  "description": "Игра «Криптерсант»",
   "scripts": {
     "lint": "eslint src/",
     "build": "webpack --mode production",

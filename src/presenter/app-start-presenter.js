@@ -6,6 +6,9 @@ import {WelcomePopupView} from "../view/start-popup/welcome-view";
 import {GenderView} from "../view/start-popup/gender-view";
 import {AvatarsView} from "../view/start-popup/avatars-view";
 import {InputNameView} from "../view/start-popup/input-name-view";
+//элементы для презентера
+import {siteMainElement, siteFooterElement, dayAfloatContainer} from "../main";
+import {dataWork} from "../mock/data-work";
 import HeadFieldPresenter from "./head-field-presenter";
 import {DAY_SIZE} from "../utils/utils";
 
@@ -28,7 +31,7 @@ export default class AppStartPresenter {
     this.#headPresenter = headPresenter;
   }
 
-  setGenderUser(gender) {
+  #setGenderUser(gender) {
     switch (gender) {
       case 'man':
         this.#dataUser = {...this.#dataUser, 'gender': 'man'};
@@ -68,7 +71,7 @@ export default class AppStartPresenter {
   nameUserElement = null;
   nameUserElementTemp = null;
 
-  setNameUser() {
+  #setNameUser() {
 
       if (this.nameUserElement === null) {
         this.nameUserElement = new NameUserView(this.#dataUser)
@@ -94,8 +97,10 @@ export default class AppStartPresenter {
     this.#welcomePopupElement.setButtonWelcomeClickHandler(this.#popupWelcomeButtonClickHandler)
 
     this.setAvatarUser();
-    this.setGenderUser();
-    this.setNameUser();
+    this.#setGenderUser();
+    this.#setNameUser();
+
+    this.#headPresenter = new HeadFieldPresenter(this.#dataUser, dataWork, siteFooterElement, siteFooterElement, dayAfloatContainer);
   }
 
   #popupWelcomeButtonClickHandler = (element) => {
@@ -106,8 +111,13 @@ export default class AppStartPresenter {
   };
 
   #popupGenderButtonClickHandler = (element, typeGender) => {
-    this.setGenderUser(typeGender)
+    this.#setGenderUser(typeGender)
     console.log(this.#dataUser)
+
+    //***********************************************************************************
+    this.#headPresenter.setGenderOfAppStartPresenter(this.#dataUser);
+    //***********************************************************************************
+
     remove(element);
     this.#avatarPopupElement = new AvatarsView(this.#dataUser);
     render(this.#avatarPopupElement, this.#startPopupElement.element);
@@ -125,7 +135,7 @@ export default class AppStartPresenter {
 
   #popupInputNameButtonClickHandler = (element, name) => {
     if (name !== null) this.#dataUser = {...this.#dataUser, 'name': name};
-    this.setNameUser();
+    this.#setNameUser();
     remove(element);
     remove(this.#startPopupElement);
     this.#headPresenter.init();

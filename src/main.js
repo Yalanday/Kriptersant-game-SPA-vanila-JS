@@ -2,18 +2,17 @@ import { dataUser } from "./mock/data-user";
 import {dataWork} from "./mock/data-work";
 import AppStartPresenter from "./presenter/app-start-presenter";
 import HeadFieldPresenter from "./presenter/head-field-presenter";
-import ExpensesHeadFieldPresenter from "./presenter/expenses-car-field-presenter";
 
-const bodyElement = document.querySelector('body');
-const siteHeaderElement = bodyElement.querySelector('.header');
-const avatarNameContainer = siteHeaderElement.querySelector('.header__user-section');
-const dayAfloatContainer = siteHeaderElement.querySelector('.header__right-section');
-const siteMainElement = bodyElement.querySelector('.main__container');
-const siteFooterElement = bodyElement.querySelector('.footer__container');
+export const bodyElement = document.querySelector('body');
+export const siteHeaderElement = bodyElement.querySelector('.header');
+export const avatarNameContainer = siteHeaderElement.querySelector('.header__user-section');
+export const dayAfloatContainer = siteHeaderElement.querySelector('.header__right-section');
+export const siteMainElement = bodyElement.querySelector('.main__container');
+export const siteFooterElement = bodyElement.querySelector('.footer__container');
 
-// const expensesHeadFieldPresenter = new ExpensesHeadFieldPresenter();
-const headFieldPresenter = new HeadFieldPresenter(dataUser, dataWork, siteMainElement, siteFooterElement, dayAfloatContainer);
-const appStartPresenter = new AppStartPresenter(dataUser, bodyElement, avatarNameContainer, headFieldPresenter);
+// const headFieldPresenter = new HeadFieldPresenter(dataUser, dataWork, siteMainElement, siteFooterElement, dayAfloatContainer);
+// const appStartPresenter = new AppStartPresenter(dataUser, bodyElement, avatarNameContainer, headFieldPresenter);
+const appStartPresenter = new AppStartPresenter(dataUser, bodyElement, avatarNameContainer);
 
 
 appStartPresenter.init();

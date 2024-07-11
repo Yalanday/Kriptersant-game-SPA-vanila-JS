@@ -1,21 +1,22 @@
 import AbstractView from '../../framework/view/abstract-view';
 import {createCarSelectTemplate} from "./templates/create-car-select-template";
-import {createWorkSelectTemplate} from "./templates/create-work-select-template";
 
 export class CarSelectedView extends AbstractView {
 
   #dataUser = null;
   #dataCar = null;
+  #minusAllMoney = null;
 
-  constructor(dataUser, dataCar) {
+  constructor(dataUser, dataCar, minusAllMoney) {
     super();
     this.#dataUser = dataUser;
     this.#dataCar = dataCar;
+    this.#minusAllMoney = minusAllMoney;
   }
 
   setSelectCarHandler(callback) {
     this._callback.carSelectClickHandler = callback;
-    // this.#setStyleElement();
+    this.#setStyleElement();
     this.element.addEventListener('click', this.#carSelectClickHandler);
   }
 
@@ -36,17 +37,22 @@ export class CarSelectedView extends AbstractView {
 
   #setStyleElement() {
     this.element.querySelectorAll('.work-select-field').forEach((el) => {
-      console.log(el)
       if (this.#dataUser.cryptans < el.dataset.price) {
         el.style.opacity = '0.5';
         el.style.pointerEvents = 'none';
+      }
+
+      if (this.#dataUser.car === el.dataset.model) {
+        el.style.opacity = '0.5';
+        el.style.pointerEvents = 'none';
+        el.style.borderColor= 'green';
       }
     })
   }
 
   #carSelectClickHandler = (evt) => {
     if (evt.target.classList.contains('work-select-field')) {
-      this._callback.carSelectClickHandler(evt.target.dataset.model);
+      this._callback.carSelectClickHandler(evt.target);
     }
   }
 

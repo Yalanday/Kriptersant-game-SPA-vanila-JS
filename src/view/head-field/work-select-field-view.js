@@ -4,10 +4,14 @@ import {createWorkSelectTemplate} from "./templates/create-work-select-template"
 export class WorkSelectFieldView extends AbstractView {
 
   #dataUser = null;
+  #dataWork = null;
 
-  constructor(dataUser) {
+
+  constructor(dataUser, dataWork) {
     super();
-    this.#dataUser = dataUser;
+    this.#dataUser = dataUser();
+    this.#dataWork = dataWork;
+
   }
 
   setWorkSelectHandler(callback) {
@@ -21,9 +25,8 @@ export class WorkSelectFieldView extends AbstractView {
     this.element.querySelector('.head-field__close-work-select').addEventListener('click', this.#closeBtnClickHandler);
   }
 
-  setEscKeydownHandler (callback) {
+  setEscKeydownHandler(callback) {
     this._callback.escKeydownWorkSelectHandler = callback;
-    console.log('escKeydownWorkSelectHandler');
     document.addEventListener('keydown', this.#escKeydownWorkSelectHandler);
   }
 
@@ -34,9 +37,15 @@ export class WorkSelectFieldView extends AbstractView {
 
   #setStyleElement() {
     this.element.querySelectorAll('.work-select-field').forEach((el) => {
-      if (this.#dataUser.days < el.dataset.experience) {
+      if (this.#dataUser.days + 2 < el.dataset.experience) {
         el.style.opacity = '0.5';
         el.style.pointerEvents = 'none';
+      }
+
+      if (this.#dataUser.work === el.dataset.property) {
+        el.style.opacity = '0.5';
+        el.style.pointerEvents = 'none';
+        el.style.borderColor= 'blue';
       }
     })
   }
@@ -50,7 +59,8 @@ export class WorkSelectFieldView extends AbstractView {
   #escKeydownWorkSelectHandler = (evt) => {
     this._callback.escKeydownWorkSelectHandler(evt);
   }
+
   get template() {
-    return createWorkSelectTemplate();
+    return createWorkSelectTemplate(this.#dataWork);
   }
 }
