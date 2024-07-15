@@ -100,7 +100,7 @@ export default class AppStartPresenter {
     this.#setGenderUser();
     this.#setNameUser();
 
-    this.#headPresenter = new HeadFieldPresenter(this.#dataUser, dataWork, siteFooterElement, siteFooterElement, dayAfloatContainer);
+    this.#headPresenter = new HeadFieldPresenter(this.#dataUser, dataWork, siteMainElement, siteFooterElement, dayAfloatContainer);
   }
 
   #popupWelcomeButtonClickHandler = (element) => {

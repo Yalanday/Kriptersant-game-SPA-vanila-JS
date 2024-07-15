@@ -7,4 +7,9 @@ export const dataUser = {
     salary: 0,
     cryptans: 0,
     car: '',
+    carCredit: 0,
+    home: '',
+    homeCredit: 0,
+    love: '',
+    loveCredit: 0,
 }

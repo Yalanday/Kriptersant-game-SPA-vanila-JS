@@ -2,16 +2,20 @@ import {render, replace, remove} from "../framework/render";
 import {HeadFildView} from "../view/head-field/head-field-view";
 import {WorkFieldView} from "../view/head-field/work-field-view";
 import {WorkSelectFieldView} from "../view/head-field/work-select-field-view";
-import CryptansStatusView from "../view/footer/cryptans-status-view";
-import SalaryStatusView from "../view/footer/salary-status-view";
+import DebitItemCryptansStatusView from "../view/footer/debit-item-cryptans-status-view";
+import DebitItemSalaryStatusView from "../view/footer/debit-item-salary-status-view";
 import DayAfloatView from "../view/header/dat-afloay-view";
 import {DAY_SIZE} from "../utils/utils";
-import ExpensesHeadFieldPresenter from "./expenses-car-field-presenter";
+import CarFieldPresenter from "./car-field-presenter";
 import BankFieldPresenter from "./bank-field-presenter";
 import LoveFieldPresenter from "./love-field-presenter";
 import CryptoFieldPresenter from "./crypto-field-presenter";
 import HomeFieldPresenter from "./home-field-presenter";
-
+import FooterLeftBlockView from "../view/footer/footer-left-block-view";
+import FooterRightBlockView from "../view/footer/footer-right-block-view";
+import FooterCreditListView from "../view/footer/footer-credit-list-view";
+import FooterDebitListView from "../view/footer/footer-debit-list-view";
+import CreditItemCarCreditView from "../view/footer/credit-item-car-credit-view";
 
 export default class HeadFieldPresenter {
   //данные
@@ -37,6 +41,12 @@ export default class HeadFieldPresenter {
   #statisticAllMoneyElement = null;
   #salaryStatusElement = null;
   #dayAfloatElement = null;
+  #leftBlockFooterElement = null;
+  #rightBlockFooterElement = null;
+  #footerCreditListElement = null;
+  #footerDebitListElement = null;
+  #creditItemCarCreditElement = null;
+
 
   // переменные для формирования первоночальных Должности и оклада
   #workForRender = null;
@@ -59,7 +69,7 @@ export default class HeadFieldPresenter {
       this.#workForRender = this.#dataWork[index].work
       this.#salaryForRender = this.#dataWork[index].salary;
       let workFieldTempElement = new WorkFieldView(this.#dataWork, this.#dataWork[index].work);
-      let salaryStatusTempElement = new SalaryStatusView(this.#dataWork[index].salary);
+      let salaryStatusTempElement = new DebitItemSalaryStatusView(this.#dataWork[index].salary);
       replace(workFieldTempElement, this.#workFieldElement);
       replace(salaryStatusTempElement, this.#salaryStatusElement);
       this.#workFieldElement = workFieldTempElement;
@@ -105,42 +115,44 @@ export default class HeadFieldPresenter {
     }, daySize);
   }
 
-  setGenderOfAppStartPresenter (data)
-  {
+  setGenderOfAppStartPresenter(data) {
     this.#dataUser = {...data};
     console.log(this.#dataUser);
-
   }
+
   //актуализация статистики баланса
   #setStatisticAllMoney() {
     let currentCryptans = this.#dataUser.cryptans;
     let currentSalaty = this.#dataUser.salary;
-    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans + currentSalaty}
-    let statisticAllMoneyTempElement = new CryptansStatusView(this.#dataUser);
+    let currentCarCredit = this.#dataUser.carCredit
+    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans + currentSalaty - currentCarCredit}
+    let statisticAllMoneyTempElement = new DebitItemCryptansStatusView(this.#dataUser);
     replace(statisticAllMoneyTempElement, this.#statisticAllMoneyElement);
     this.#statisticAllMoneyElement = statisticAllMoneyTempElement;
   }
 
+  // перерисовка расхода на тачку
+  #setCreditItemCarCreditValue = () => {
+    let CreditItemCarCreditTempElement = new CreditItemCarCreditView(this.#dataUser);
+    replace(CreditItemCarCreditTempElement, this.#creditItemCarCreditElement);
+    this.#creditItemCarCreditElement = CreditItemCarCreditTempElement;
+  }
+
   init() {
+
+    //***************** HEADER *****************//
 
     //статистика игровых дней
     this.#dayAfloatElement = new DayAfloatView(this.#dataUser);
     render(this.#dayAfloatElement, this.#dayAfloatContainer);
-
-    //главное поле
-    this.#headFiledElement = new HeadFildView;
-    render(this.#headFiledElement, this.#siteMainElement);
-
-    //статистика сколько всего крипты
-    this.#statisticAllMoneyElement = new CryptansStatusView(this.#dataUser);
-    render(this.#statisticAllMoneyElement, this.#siteFooterElement);
-
-    //статистика какая зарплата
-    this.#salaryStatusElement = new SalaryStatusView;
-    render(this.#salaryStatusElement, this.#siteFooterElement);
-
     //счетчик дней
     this.setDayExperience(DAY_SIZE);
+
+    //***************** MAIN *****************//
+
+    //главное поле для плашек с выбором разделов игры
+    this.#headFiledElement = new HeadFildView;
+    render(this.#headFiledElement, this.#siteMainElement);
 
     //установка начальных статусов работы и зарплаты
     this.#setWorkSalaryForRender()
@@ -151,7 +163,7 @@ export default class HeadFieldPresenter {
     this.#workFieldElement.setWorkFieldHandler(this.#handleWorkField);
 
     //Расходы - Моя тачка - дочерний презентер
-    this.#expensesCarHeadFieldPresenter = new ExpensesHeadFieldPresenter(this.#actualDataUser, this.#headFiledElement, this.#setDataMinusAllMoney, this.#setCurrentPropertyUser);
+    this.#expensesCarHeadFieldPresenter = new CarFieldPresenter(this.#actualDataUser, this.#headFiledElement, this.#setDataMinusAllMoney, this.#setCurrentPropertyUser, this.#setCreditItemCarCreditValue);
     this.#expensesCarHeadFieldPresenter.init();
 
     // Банк - дочерний презентер
@@ -169,6 +181,36 @@ export default class HeadFieldPresenter {
     // Моя хата - дочерний презентер
     this.#homeFieldPresenter = new HomeFieldPresenter(this.#headFiledElement);
     this.#homeFieldPresenter.init();
+
+    //***************** FOOTER *****************//
+    // статистика доходов (левый блок) расходов (правый блок)
+    this.#leftBlockFooterElement = new FooterLeftBlockView();
+    render(this.#leftBlockFooterElement, this.#siteFooterElement);
+
+    this.#rightBlockFooterElement = new FooterRightBlockView();
+    render(this.#rightBlockFooterElement, this.#siteFooterElement);
+
+    // Приход - debit-list
+
+    this.#footerDebitListElement = new FooterDebitListView(this.#dataUser);
+    render(this.#footerDebitListElement, this.#leftBlockFooterElement.element);
+
+    //Всего на счету:
+    this.#statisticAllMoneyElement = new DebitItemCryptansStatusView(this.#dataUser);
+    render(this.#statisticAllMoneyElement, this.#footerDebitListElement.element);
+
+    // Зарплата/оклад
+    this.#salaryStatusElement = new DebitItemSalaryStatusView;
+    render(this.#salaryStatusElement, this.#footerDebitListElement.element);
+
+
+    // Расход - credit-list
+    this.#footerCreditListElement = new FooterCreditListView();
+    render(this.#footerCreditListElement, this.#rightBlockFooterElement.element);
+
+    // На тачку:
+    this.#creditItemCarCreditElement = new CreditItemCarCreditView(this.#actualDataUser);
+    render(this.#creditItemCarCreditElement, this.#footerCreditListElement.element);
   }
 
   // методы раздела про работу

@@ -3,21 +3,23 @@ import {ExpensesCarFieldView} from "../view/head-field/car-expenses-field-view";
 import {CarSelectedView} from "../view/head-field/car-selected-view";
 import {dataCar} from "../mock/data-car";
 
-export default class ExpensesHeadFieldPresenter {
+export default class CarFieldPresenter {
   #element = null;
   #container = null;
   #dataUser= null;
   #dataCar = dataCar;
   #MinusAllMoney = null;
   #setterCarForDataUser = null;
+  #setCreditItemCarCreditValue = null;
 
   #carSelectElement = null;
 
-  constructor(dataUser, container, minusAllMoney, setterCarForDataUser) {
+  constructor(dataUser, container, minusAllMoney, setterCarForDataUser, setCreditItemCarCreditValue) {
     this.#dataUser = dataUser;
     this.#container = container;
     this.#MinusAllMoney = minusAllMoney;
     this.#setterCarForDataUser = setterCarForDataUser;
+    this.#setCreditItemCarCreditValue = setCreditItemCarCreditValue;
   }
 
   init() {
@@ -58,6 +60,8 @@ export default class ExpensesHeadFieldPresenter {
     this.#element.setCarFieldHandler(this.#handleCarField);
     this.#MinusAllMoney(Number(evt.dataset.price));
     this.#setterCarForDataUser('car', evt.dataset.model);
+    this.#setterCarForDataUser('carCredit', +evt.dataset.expenses);
+    this.#setCreditItemCarCreditValue();
     console.log(this.#dataUser())
 
   }
