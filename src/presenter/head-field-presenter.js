@@ -1,11 +1,9 @@
 import {render, replace, remove} from "../framework/render";
 import {HeadFildView} from "../view/head-field/head-field-view";
-import {WorkFieldView} from "../view/head-field/work-field-view";
-import {WorkSelectFieldView} from "../view/head-field/work-select-field-view";
 import DebitItemCryptansStatusView from "../view/footer/debit-item-cryptans-status-view";
 import DebitItemSalaryStatusView from "../view/footer/debit-item-salary-status-view";
 import DayAfloatView from "../view/header/dat-afloay-view";
-import {addOverlay, DAY_SIZE, removeOverlay} from "../utils/utils";
+import {DAY_SIZE, getRandomInRange} from "../utils/utils";
 import WorkFieldPresenter from "./work-field-presenter";
 import CarFieldPresenter from "./car-field-presenter";
 import BankFieldPresenter from "./bank-field-presenter";
@@ -20,11 +18,13 @@ import CreditItemCarCreditView from "../view/footer/credit-item-car-credit-view"
 import CreditItemHomeCreditView from "../view/footer/credit-item-home-credit-view";
 import DurCoinFieldPresenter from "./dur-coin-field-presenter";
 import DebitItemDurCoinStatusView from "../view/footer/debit-item-dur-coin-status-view";
+import ChartPresenter from "./chart-presenter";
 
 export default class HeadFieldPresenter {
   //данные
   #dataUser = null;
   #dataWork = null;
+  #configChart = null;
 
   //overlay for modal
 
@@ -36,6 +36,7 @@ export default class HeadFieldPresenter {
   #cryptoFieldPresenter = null;
   #homeFieldPresenter = null;
   #durCoinFieldPresenter = null;
+  #chartPresenter = null;
 
   //контейнеры
   #headFiledElement = null;
@@ -55,9 +56,10 @@ export default class HeadFieldPresenter {
   #creditItemHomeCreditElement = null;
   #debitItemDurCoinStatusElement = null;
 
-  constructor(dataUser, dataWork, siteMainElement, siteFooterElement, dayAfloatContainer) {
+  constructor(dataUser, dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer) {
     this.#dataUser = dataUser;
     this.#dataWork = dataWork;
+    this.#configChart = configChart;
     this.#siteMainElement = siteMainElement;
     this.#siteFooterElement = siteFooterElement;
     this.#dayAfloatContainer = dayAfloatContainer;
@@ -77,6 +79,14 @@ export default class HeadFieldPresenter {
     return this.#dataUser;
   }
 
+  #setNewDataConfigChart = () => {
+    this.#configChart.data.datasets.forEach((element) => {
+      element.data.shift();
+      element.data.push(getRandomInRange(0, 3000));
+    });
+    this.#chartPresenter.update(this.#configChart);
+  }
+
   //минусация при покупках
   #setDataMinusAllMoney = (sumMinus = 0) => {
     let currentCryptans = this.#dataUser.cryptans;
@@ -93,7 +103,9 @@ export default class HeadFieldPresenter {
       }
     }
     this.#dataUser = {...state};
+    console.log('Это проверка изменений глобоальных данных')
     console.log(this.#dataUser)
+    console.log(this.#configChart)
   }
 
 // счетчик дней и актуализация статистики баланса
@@ -104,7 +116,10 @@ export default class HeadFieldPresenter {
       let dayAfloatTempElement = new DayAfloatView(this.#dataUser);
       replace(dayAfloatTempElement, this.#dayAfloatElement);
       this.#dayAfloatElement = dayAfloatTempElement;
-      this.#setStatisticAllMoney()
+      this.#setStatisticAllMoney();
+
+      this.#setNewDataConfigChart()
+
     }, daySize);
   }
 
@@ -147,7 +162,6 @@ export default class HeadFieldPresenter {
   }
 
   init() {
-
     //***************** HEADER *****************//
 
     //статистика игровых дней
@@ -190,7 +204,6 @@ export default class HeadFieldPresenter {
     this.#loveFieldPresenter = new LoveFieldPresenter(this.#dataUser, this.#headFiledElement);
     this.#loveFieldPresenter.init();
 
-
     //***************** FOOTER *****************//
     // статистика доходов (левый блок) расходов (правый блок)
     this.#leftBlockFooterElement = new FooterLeftBlockView();
@@ -228,5 +241,9 @@ export default class HeadFieldPresenter {
     this.#creditItemHomeCreditElement = new CreditItemHomeCreditView(this.#actualDataUser);
     render(this.#creditItemHomeCreditElement, this.#footerCreditListElement.element);
 
+    // График цен на крипту
+
+    this.#chartPresenter = new ChartPresenter(this.#dataUser, this.#configChart, this.#siteFooterElement.parentElement, );
+    this.#chartPresenter.init();
   }
 }

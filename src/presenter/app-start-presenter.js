@@ -9,8 +9,9 @@ import {InputNameView} from "../view/start-popup/input-name-view";
 //элементы для презентера
 import {siteMainElement, siteFooterElement, dayAfloatContainer} from "../main";
 import {dataWork} from "../mock/data-work";
+import {configChart} from "../mock/config-chart";
 import HeadFieldPresenter from "./head-field-presenter";
-import {DAY_SIZE} from "../utils/utils";
+
 
 export default class AppStartPresenter {
   #dataUser = null;
@@ -100,7 +101,7 @@ export default class AppStartPresenter {
     this.#setGenderUser();
     this.#setNameUser();
 
-    this.#headPresenter = new HeadFieldPresenter(this.#dataUser, dataWork, siteMainElement, siteFooterElement, dayAfloatContainer);
+    this.#headPresenter = new HeadFieldPresenter(this.#dataUser, dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer);
   }
 
   #popupWelcomeButtonClickHandler = (element) => {

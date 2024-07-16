@@ -1,7 +1,9 @@
-import { dataUser } from "./mock/data-user";
+import {dataUser} from "./mock/data-user";
 import {dataWork} from "./mock/data-work";
 import AppStartPresenter from "./presenter/app-start-presenter";
 import HeadFieldPresenter from "./presenter/head-field-presenter";
+import {configChart} from "./mock/config-chart";
+
 
 export const bodyElement = document.querySelector('body');
 export const overlayBodyElement = bodyElement.querySelector('.body-overlay');
@@ -11,12 +13,14 @@ export const dayAfloatContainer = siteHeaderElement.querySelector('.header__righ
 export const siteMainElement = bodyElement.querySelector('.main__container');
 export const siteFooterElement = bodyElement.querySelector('.footer__container');
 
-const headFieldPresenter = new HeadFieldPresenter(dataUser, dataWork, siteMainElement, siteFooterElement, dayAfloatContainer);
+const headFieldPresenter = new HeadFieldPresenter(dataUser, dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer);
 // const appStartPresenter = new AppStartPresenter(dataUser, bodyElement, avatarNameContainer, headFieldPresenter);
-const appStartPresenter = new AppStartPresenter(dataUser, bodyElement, avatarNameContainer);
+// const appStartPresenter = new AppStartPresenter(dataUser, bodyElement, avatarNameContainer);
 
 
 // appStartPresenter.init();
 headFieldPresenter.init();
+
+
 
 
