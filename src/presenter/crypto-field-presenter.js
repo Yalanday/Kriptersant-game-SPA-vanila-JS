@@ -1,6 +1,7 @@
 import {render, replace, remove} from "../framework/render";
 import {CryptoFieldView} from "../view/head-field/crypto-field-view";
 import {CryptoSelectedView} from "../view/head-field/crypto-selected-view";
+import {addOverlay, removeOverlay} from "../utils/utils";
 
 
 export default class CryptoFieldPresenter {
@@ -26,11 +27,13 @@ export default class CryptoFieldPresenter {
     this.#cryptoSelectElement.setCryptoCloseBtnHandler(this.#handleCloseBtnCryptoSelect);
     this.#cryptoSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectCrypto);
     // this.#bankSelectElement.setSelectCarHandler(this.#handleSelectCar);
+    addOverlay();
   }
 
   #handleCloseBtnCryptoSelect = () => {
     remove(this.#cryptoSelectElement);
     this.#element.setCryptoFieldHandler(this.#handleCryptoField);
+    removeOverlay();
   }
 
   #onEscKeyDownForSelectCrypto = (evt) => {
@@ -39,6 +42,7 @@ export default class CryptoFieldPresenter {
       remove(this.#cryptoSelectElement);
       this.#element.setCryptoFieldHandler(this.#handleCryptoField);
       document.removeEventListener('keydown', this.#onEscKeyDownForSelectCrypto);
+      removeOverlay();
     }
   };
 

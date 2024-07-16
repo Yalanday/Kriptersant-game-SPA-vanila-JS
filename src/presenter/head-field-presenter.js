@@ -5,7 +5,8 @@ import {WorkSelectFieldView} from "../view/head-field/work-select-field-view";
 import DebitItemCryptansStatusView from "../view/footer/debit-item-cryptans-status-view";
 import DebitItemSalaryStatusView from "../view/footer/debit-item-salary-status-view";
 import DayAfloatView from "../view/header/dat-afloay-view";
-import {DAY_SIZE} from "../utils/utils";
+import {addOverlay, DAY_SIZE, removeOverlay} from "../utils/utils";
+import WorkFieldPresenter from "./work-field-presenter";
 import CarFieldPresenter from "./car-field-presenter";
 import BankFieldPresenter from "./bank-field-presenter";
 import LoveFieldPresenter from "./love-field-presenter";
@@ -16,18 +17,25 @@ import FooterRightBlockView from "../view/footer/footer-right-block-view";
 import FooterCreditListView from "../view/footer/footer-credit-list-view";
 import FooterDebitListView from "../view/footer/footer-debit-list-view";
 import CreditItemCarCreditView from "../view/footer/credit-item-car-credit-view";
+import CreditItemHomeCreditView from "../view/footer/credit-item-home-credit-view";
+import DurCoinFieldPresenter from "./dur-coin-field-presenter";
+import DebitItemDurCoinStatusView from "../view/footer/debit-item-dur-coin-status-view";
 
 export default class HeadFieldPresenter {
   //данные
   #dataUser = null;
   #dataWork = null;
 
+  //overlay for modal
+
   //дочерние презентеры
+  #workFieldPresenter = null;
   #expensesCarHeadFieldPresenter = null;
   #bankFieldPresenter = null;
   #loveFieldPresenter = null;
   #cryptoFieldPresenter = null;
   #homeFieldPresenter = null;
+  #durCoinFieldPresenter = null;
 
   //контейнеры
   #headFiledElement = null;
@@ -36,8 +44,6 @@ export default class HeadFieldPresenter {
   #dayAfloatContainer = null;
 
   //создаваемые элементы
-  #workFieldElement = null;
-  #workSelectElement = null;
   #statisticAllMoneyElement = null;
   #salaryStatusElement = null;
   #dayAfloatElement = null;
@@ -46,11 +52,8 @@ export default class HeadFieldPresenter {
   #footerCreditListElement = null;
   #footerDebitListElement = null;
   #creditItemCarCreditElement = null;
-
-
-  // переменные для формирования первоночальных Должности и оклада
-  #workForRender = null;
-  #salaryForRender = null;
+  #creditItemHomeCreditElement = null;
+  #debitItemDurCoinStatusElement = null;
 
   constructor(dataUser, dataWork, siteMainElement, siteFooterElement, dayAfloatContainer) {
     this.#dataUser = dataUser;
@@ -60,21 +63,11 @@ export default class HeadFieldPresenter {
     this.#dayAfloatContainer = dayAfloatContainer;
   }
 
-  //установщик работы и зарплаты
-  #setWorkSalaryForRender(index = 0) {
-    if (this.#workFieldElement === null) {
-      this.#workForRender = this.#dataWork[index].work
-      this.#salaryForRender = this.#dataWork[index].salary;
-    } else {
-      this.#workForRender = this.#dataWork[index].work
-      this.#salaryForRender = this.#dataWork[index].salary;
-      let workFieldTempElement = new WorkFieldView(this.#dataWork, this.#dataWork[index].work);
+  // передаваемый установщик зарплаты
+  #setSalaryForRender = (index = 0) => {
       let salaryStatusTempElement = new DebitItemSalaryStatusView(this.#dataWork[index].salary);
-      replace(workFieldTempElement, this.#workFieldElement);
       replace(salaryStatusTempElement, this.#salaryStatusElement);
-      this.#workFieldElement = workFieldTempElement;
       this.#salaryStatusElement = salaryStatusTempElement;
-    }
   }
 
   #count = 0;
@@ -91,7 +84,7 @@ export default class HeadFieldPresenter {
     this.#setStatisticAllMoney()
   }
 
-  //установка новых значений имущества dataUser
+  //установка новых значений свойств dataUser
   #setCurrentPropertyUser = (property = '', value) => {
     let state = this.#dataUser;
     for (let key in state) {
@@ -124,8 +117,10 @@ export default class HeadFieldPresenter {
   #setStatisticAllMoney() {
     let currentCryptans = this.#dataUser.cryptans;
     let currentSalaty = this.#dataUser.salary;
-    let currentCarCredit = this.#dataUser.carCredit
-    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans + currentSalaty - currentCarCredit}
+    let currentCarCredit = this.#dataUser.carCredit;
+    let currentHomeCredit = this.#dataUser.homeCredit;
+    let allCredit = currentCarCredit + currentHomeCredit;
+    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans + currentSalaty - allCredit}
     let statisticAllMoneyTempElement = new DebitItemCryptansStatusView(this.#dataUser);
     replace(statisticAllMoneyTempElement, this.#statisticAllMoneyElement);
     this.#statisticAllMoneyElement = statisticAllMoneyTempElement;
@@ -136,6 +131,19 @@ export default class HeadFieldPresenter {
     let CreditItemCarCreditTempElement = new CreditItemCarCreditView(this.#dataUser);
     replace(CreditItemCarCreditTempElement, this.#creditItemCarCreditElement);
     this.#creditItemCarCreditElement = CreditItemCarCreditTempElement;
+  }
+
+  #setCreditItemHomeCreditValue = () => {
+    console.log('is credit home')
+    let CreditItemHomeCreditTempElement = new CreditItemHomeCreditView(this.#dataUser);
+    replace(CreditItemHomeCreditTempElement, this.#creditItemHomeCreditElement);
+    this.#creditItemHomeCreditElement = CreditItemHomeCreditTempElement;
+  }
+
+  #setDebitItemDurCoinFieldValue = () => {
+    let debitItemDurCoinStatusTempElement = new DebitItemDurCoinStatusView(this.#dataUser);
+    replace(debitItemDurCoinStatusTempElement, this.#debitItemDurCoinStatusElement);
+    this.#debitItemDurCoinStatusElement = debitItemDurCoinStatusTempElement;
   }
 
   init() {
@@ -154,33 +162,34 @@ export default class HeadFieldPresenter {
     this.#headFiledElement = new HeadFildView;
     render(this.#headFiledElement, this.#siteMainElement);
 
-    //установка начальных статусов работы и зарплаты
-    this.#setWorkSalaryForRender()
-
-    //поле кнопка "Работа"
-    this.#workFieldElement = new WorkFieldView;
-    render(this.#workFieldElement, this.#headFiledElement.element);
-    this.#workFieldElement.setWorkFieldHandler(this.#handleWorkField);
-
-    //Расходы - Моя тачка - дочерний презентер
-    this.#expensesCarHeadFieldPresenter = new CarFieldPresenter(this.#actualDataUser, this.#headFiledElement, this.#setDataMinusAllMoney, this.#setCurrentPropertyUser, this.#setCreditItemCarCreditValue);
-    this.#expensesCarHeadFieldPresenter.init();
+    // "Работа" - Дочерний презентер
+    this.#workFieldPresenter = new WorkFieldPresenter(this.#actualDataUser, this.#dataWork, this.#headFiledElement, this.#siteMainElement, this.#setCurrentPropertyUser, this.#setSalaryForRender);
+    this.#workFieldPresenter.init();
 
     // Банк - дочерний презентер
     this.#bankFieldPresenter = new BankFieldPresenter(this.#headFiledElement);
     this.#bankFieldPresenter.init();
 
-    // Любовь - дочерний презентер
-    this.#loveFieldPresenter = new LoveFieldPresenter(this.#dataUser, this.#headFiledElement);
-    this.#loveFieldPresenter.init();
-
     // КриптоБыржа - дочерний презентер
     this.#cryptoFieldPresenter = new CryptoFieldPresenter(this.#headFiledElement);
     this.#cryptoFieldPresenter.init();
 
+    // Тапай ДурКоин - дочерний презентер
+    this.#durCoinFieldPresenter = new DurCoinFieldPresenter(this.#actualDataUser, this.#headFiledElement, this.#setCurrentPropertyUser, this.#setDebitItemDurCoinFieldValue);
+    this.#durCoinFieldPresenter.init();
+
     // Моя хата - дочерний презентер
-    this.#homeFieldPresenter = new HomeFieldPresenter(this.#headFiledElement);
+    this.#homeFieldPresenter = new HomeFieldPresenter(this.#actualDataUser, this.#headFiledElement, this.#setDataMinusAllMoney, this.#setCurrentPropertyUser, this.#setCreditItemHomeCreditValue);
     this.#homeFieldPresenter.init();
+
+    //Расходы - Моя тачка - дочерний презентер
+    this.#expensesCarHeadFieldPresenter = new CarFieldPresenter(this.#actualDataUser, this.#headFiledElement, this.#setDataMinusAllMoney, this.#setCurrentPropertyUser, this.#setCreditItemCarCreditValue);
+    this.#expensesCarHeadFieldPresenter.init();
+
+    // Любовь - дочерний презентер
+    this.#loveFieldPresenter = new LoveFieldPresenter(this.#dataUser, this.#headFiledElement);
+    this.#loveFieldPresenter.init();
+
 
     //***************** FOOTER *****************//
     // статистика доходов (левый блок) расходов (правый блок)
@@ -203,6 +212,9 @@ export default class HeadFieldPresenter {
     this.#salaryStatusElement = new DebitItemSalaryStatusView;
     render(this.#salaryStatusElement, this.#footerDebitListElement.element);
 
+    // Дуркоины на счету
+    this.#debitItemDurCoinStatusElement = new DebitItemDurCoinStatusView(this.#dataUser);
+    render(this.#debitItemDurCoinStatusElement, this.#footerDebitListElement.element);
 
     // Расход - credit-list
     this.#footerCreditListElement = new FooterCreditListView();
@@ -211,42 +223,10 @@ export default class HeadFieldPresenter {
     // На тачку:
     this.#creditItemCarCreditElement = new CreditItemCarCreditView(this.#actualDataUser);
     render(this.#creditItemCarCreditElement, this.#footerCreditListElement.element);
-  }
 
-  // методы раздела про работу
-  #handleWorkField = () => {
-    this.#workSelectElement = new WorkSelectFieldView(this.#actualDataUser, this.#dataWork)
-    render(this.#workSelectElement, this.#siteMainElement);
-    this.#workSelectElement.setWorkSelectHandler(this.#handleWorkSelect);
-    this.#workSelectElement.setCloseBtnHandler(this.#handleCloseBtnWorkSelect);
-    this.#workSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectWork);
+    // На хату:
+    this.#creditItemHomeCreditElement = new CreditItemHomeCreditView(this.#actualDataUser);
+    render(this.#creditItemHomeCreditElement, this.#footerCreditListElement.element);
 
   }
-
-  //выбор работы
-  #handleWorkSelect = (index) => {
-    this.#setWorkSalaryForRender(index)
-    this.#dataUser = {...this.#dataUser, salary: this.#salaryForRender};
-    remove(this.#workSelectElement);
-    this.#setCurrentPropertyUser('work', this.#dataWork[index].work)
-
-    this.#workFieldElement.setWorkFieldHandler(this.#handleWorkField);
-
-  }
-
-  //кнопка закрытия поля выбор работы
-  #handleCloseBtnWorkSelect = () => {
-    remove(this.#workSelectElement);
-    this.#workFieldElement.setWorkFieldHandler(this.#handleWorkField);
-  }
-
-  #onEscKeyDownForSelectWork = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      remove(this.#workSelectElement);
-      this.#workFieldElement.setWorkFieldHandler(this.#handleWorkField);
-      document.removeEventListener('keydown', this.#onEscKeyDownForSelectWork);
-    }
-  };
-
 }

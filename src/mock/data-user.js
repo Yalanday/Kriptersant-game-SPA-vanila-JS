@@ -6,6 +6,7 @@ export const dataUser = {
     days: 0,
     salary: 0,
     cryptans: 0,
+    durCoin: 0,
     car: '',
     carCredit: 0,
     home: '',

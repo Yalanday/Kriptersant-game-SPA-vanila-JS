@@ -1,6 +1,7 @@
 import {render, replace, remove} from "../framework/render";
 import {LoveFieldView} from "../view/head-field/love-field-view";
 import {LoveSelectedView} from "../view/head-field/love-selected-view";
+import {addOverlay, removeOverlay} from "../utils/utils";
 
 
 export default class LoveFieldPresenter {
@@ -28,11 +29,13 @@ export default class LoveFieldPresenter {
     this.#loveSelectElement.setLoveCloseBtnHandler(this.#handleCloseBtnBankSelect);
     this.#loveSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectLove);
     // this.#bankSelectElement.setSelectCarHandler(this.#handleSelectCar);
+    addOverlay();
   }
 
   #handleCloseBtnBankSelect = () => {
     remove(this.#loveSelectElement);
     this.#element.setLoveFieldHandler(this.#handleLoveField);
+    removeOverlay();
   }
 
   #onEscKeyDownForSelectLove = (evt) => {
@@ -41,6 +44,7 @@ export default class LoveFieldPresenter {
       remove(this.#loveSelectElement);
       this.#element.setLoveFieldHandler(this.#handleLoveField);
       document.removeEventListener('keydown', this.#onEscKeyDownForSelectLove);
+      removeOverlay();
     }
   };
 

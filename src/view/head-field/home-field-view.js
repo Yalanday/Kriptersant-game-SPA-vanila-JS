@@ -1,10 +1,13 @@
 import AbstractView from '../../framework/view/abstract-view';
 import {createHomeFieldTemplate} from "./templates/create-home-field-template";
+
 export class HomeFieldView extends AbstractView {
 
+  #home = null;
 
-  constructor() {
+  constructor(home = "У мамы") {
     super();
+    this.#home = home;
   }
 
   setHomeFieldHandler(callback) {
@@ -17,6 +20,6 @@ export class HomeFieldView extends AbstractView {
   }
 
   get template() {
-    return createHomeFieldTemplate();
+    return createHomeFieldTemplate(this.#home);
   }
 }

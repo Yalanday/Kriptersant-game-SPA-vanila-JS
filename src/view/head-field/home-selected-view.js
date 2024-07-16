@@ -2,13 +2,20 @@ import AbstractView from '../../framework/view/abstract-view';
 import {createHomeSelectTemplate} from "./templates/create-home-select-template";
 
 export class HomeSelectedView extends AbstractView {
+  #dataUser = null;
+  #dataHome = null;
+  #minusAllMoney = null;
 
-  constructor() {
+  constructor(dataUser, dataHome, minusAllMoney) {
     super();
+    this.#dataUser = dataUser;
+    this.#dataHome = dataHome;
+    this.#minusAllMoney = minusAllMoney;
   }
 
   setHomeSelectHandler(callback) {
     this._callback.homeSelectClickHandler = callback;
+    this.#setStyleElement();
     this.element.addEventListener('click', this.#homeSelectClickHandler);
   }
 
@@ -37,8 +44,23 @@ export class HomeSelectedView extends AbstractView {
     this._callback.escKeydownHomeSelectHandler(evt);
   }
 
+  #setStyleElement() {
+    this.element.querySelectorAll('.work-select-field').forEach((el) => {
+      if (this.#dataUser.cryptans < +el.dataset.price) {
+        el.style.opacity = '0.5';
+        el.style.pointerEvents = 'none';
+      }
+
+      if (this.#dataUser.home === el.dataset.model) {
+        el.style.opacity = '0.5';
+        el.style.pointerEvents = 'none';
+        el.style.borderColor= 'green';
+      }
+    })
+  }
+
 
   get template() {
-    return createHomeSelectTemplate();
+    return createHomeSelectTemplate(this.#dataHome);
   }
 }

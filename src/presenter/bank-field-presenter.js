@@ -1,6 +1,8 @@
 import {render, replace, remove} from "../framework/render";
 import {BankFieldView} from "../view/head-field/bank-field-view";
 import {BankSelectedView} from "../view/head-field/bank-selected-view";
+import HeadFieldPresenter from "./head-field-presenter";
+import {addOverlay, removeOverlay} from "../utils/utils";
 
 export default class BankFieldPresenter {
   #element = null;
@@ -25,11 +27,13 @@ export default class BankFieldPresenter {
     this.#bankSelectElement.setBankCloseBtnHandler(this.#handleCloseBtnBankSelect);
     this.#bankSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectCar);
     // this.#bankSelectElement.setSelectCarHandler(this.#handleSelectCar);
+    addOverlay();
   }
 
   #handleCloseBtnBankSelect = () => {
     remove(this.#bankSelectElement);
     this.#element.setBankFieldHandler(this.#handleBankField);
+    removeOverlay();
   }
 
   #onEscKeyDownForSelectCar = (evt) => {
@@ -38,6 +42,7 @@ export default class BankFieldPresenter {
       remove(this.#bankSelectElement);
       this.#element.setBankFieldHandler(this.#handleBankField);
       document.removeEventListener('keydown', this.#onEscKeyDownForSelectCar);
+      removeOverlay();
     }
   };
 

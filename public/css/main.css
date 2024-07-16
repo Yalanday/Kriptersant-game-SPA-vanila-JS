@@ -72,6 +72,21 @@ body {
     position: relative;
 }
 
+.body-overlay {
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.2);
+    top: 0;
+    left: 0;
+    display: none;
+
+}
+
+.body-overlay.active {
+    position: fixed;
+    display: block;
+}
+
 .hide-overflow {
     overflow: hidden;
 }
@@ -103,8 +118,7 @@ a:link {
     background-image: url('../images/bitcoin-png.png');
     background-size: 90% 90%;
     background-repeat: no-repeat;
-    background-position: center;
-;
+    background-position: center;;
 }
 
 .header__container {
@@ -304,6 +318,11 @@ a:link {
     flex-wrap: wrap;
     justify-content: space-between;
     row-gap: 10px;
+    z-index: 10;
+}
+
+.head-field__work-select-container--dur {
+    width: max-content;
 }
 
 .work-select-field {
@@ -383,3 +402,79 @@ a:link {
     margin: 0;
     text-align: center;
 }
+
+.dur-coin-tap-title {
+    display: block;
+    width: 100%;
+    margin: 0 auto 20px;
+    text-align: center;
+}
+
+.dur-coin-tap-button {
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    width: max-content;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    -webkit-box-shadow: 0 0 8px 3px rgba(184, 188, 191, 0.49);
+    -moz-box-shadow: 0 0 8px 3px rgba(184, 188, 191, 0.49);
+    box-shadow: 0 0 8px 3px rgba(184, 188, 191, 0.49);
+    transition: all .2s ease-out;
+}
+
+.dur-coin-tap-button:hover {
+    scale: 1.1;
+}
+
+.dur-coin-tap-button:active {
+    scale: 1;
+}
+
+.dur-coin-tap-img {
+    display: block;
+    width: 450px;
+}
+
+.dur-coin-tap-hidden-coin {
+    width: 50px;
+    height: 50px;
+    background-image: url('../images/toncoin-logo.png');
+    background-size: cover;
+    position: absolute;
+    left: 35%;
+    top: 55%;
+    opacity: 0;
+    transition: all .4s ease-out;
+    scale: 0.7;
+}
+
+.dur-coin-tap-hidden-coin.active {
+    opacity: 1;
+    scale: 1.5;
+    top: 100%;
+}
+
+.dur-coin-tap-hidden-phrase {
+    padding: 40px 20px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    font-size: 28px;
+    background-color: #ffffff;
+    position: absolute;
+    left: 60%;
+    top: 35%;
+    opacity: 0;
+    transition: all .4s ease-out;
+    scale: 0.7;
+}
+
+.dur-coin-tap-hidden-phrase.active {
+    opacity: 1;
+    scale: 1.5;
+}
+

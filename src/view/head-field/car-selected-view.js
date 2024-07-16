@@ -5,13 +5,11 @@ export class CarSelectedView extends AbstractView {
 
   #dataUser = null;
   #dataCar = null;
-  #minusAllMoney = null;
 
-  constructor(dataUser, dataCar, minusAllMoney) {
+  constructor(dataUser, dataCar) {
     super();
     this.#dataUser = dataUser;
     this.#dataCar = dataCar;
-    this.#minusAllMoney = minusAllMoney;
   }
 
   setSelectCarHandler(callback) {

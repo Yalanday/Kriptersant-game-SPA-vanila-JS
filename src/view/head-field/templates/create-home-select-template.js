@@ -1,13 +1,15 @@
+const createItemHomeSelect = (model, price, expenses, index) => {
+    return `<div style="background-image: url('./images/home/home-${index+1}.jpg');" data-model="${model}" data-price="${price}" data-expenses="${expenses}"class="head-field__child-field work-select-field">${price}</div>`;
 
-export const createHomeSelectTemplate = () => {
+}
+
+export const createHomeSelectTemplate= (data) => {
+    const homeSelect = data.map((home, index) => {
+        return createItemHomeSelect(home.model, home.price, home.expenses, index);
+    }).join("");
 
     return `<div class="head-field__work-select-container">
                 <button class="head-field__close-work-select">&#10006;</button>
-                <div style="background-color: #fff;" class="head-field__child-field work-select-field">Лачуга</div>
-                <div style="background-color: #fff;" class="head-field__child-field work-select-field">Однушка</div>
-                <div style="background-color: #fff;" class="head-field__child-field work-select-field">Двушка</div>
-                <div style="background-color: #fff;" class="head-field__child-field work-select-field">Двухуровневка</div>
-                <div style="background-color: #fff;" class="head-field__child-field work-select-field">Коттедж</div>
-                <div style="background-color: #fff;" class="head-field__child-field work-select-field">Дворец</div>
+                ${homeSelect}     
             </div>`
 }

@@ -10,7 +10,6 @@ export class WorkFieldView extends AbstractView {
     super();
     this.#dataWork = dataWork;
     this.#workForRender = workForRender;
-
   }
 
   setWorkFieldHandler(callback) {

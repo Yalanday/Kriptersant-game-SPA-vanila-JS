@@ -11,7 +11,6 @@ export class WorkSelectFieldView extends AbstractView {
     super();
     this.#dataUser = dataUser();
     this.#dataWork = dataWork;
-
   }
 
   setWorkSelectHandler(callback) {

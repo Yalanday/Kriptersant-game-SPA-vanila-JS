@@ -4,6 +4,7 @@ import AppStartPresenter from "./presenter/app-start-presenter";
 import HeadFieldPresenter from "./presenter/head-field-presenter";
 
 export const bodyElement = document.querySelector('body');
+export const overlayBodyElement = bodyElement.querySelector('.body-overlay');
 export const siteHeaderElement = bodyElement.querySelector('.header');
 export const avatarNameContainer = siteHeaderElement.querySelector('.header__user-section');
 export const dayAfloatContainer = siteHeaderElement.querySelector('.header__right-section');

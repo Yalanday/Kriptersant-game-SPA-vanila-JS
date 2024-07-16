@@ -1,6 +1,6 @@
 import AbstractView from '../../framework/view/abstract-view';
-import {createCarExpensesFieldTemplate} from "./templates/create-car-expenses-field-template";
-export class ExpensesCarFieldView extends AbstractView {
+import {createCarFieldTemplate} from "./templates/create-car-field-template";
+export class CarFieldView extends AbstractView {
   #car = null
 
   constructor(car = "Тапочки") {
@@ -18,6 +18,6 @@ export class ExpensesCarFieldView extends AbstractView {
   }
 
   get template() {
-    return createCarExpensesFieldTemplate(this.#car);
+    return createCarFieldTemplate(this.#car);
   }
 }

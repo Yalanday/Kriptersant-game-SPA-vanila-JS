@@ -1,12 +1,13 @@
 import {render, replace, remove} from "../framework/render";
-import {ExpensesCarFieldView} from "../view/head-field/car-expenses-field-view";
+import {CarFieldView} from "../view/head-field/car-field-view";
 import {CarSelectedView} from "../view/head-field/car-selected-view";
 import {dataCar} from "../mock/data-car";
+import {addOverlay, removeOverlay} from "../utils/utils";
 
 export default class CarFieldPresenter {
   #element = null;
   #container = null;
-  #dataUser= null;
+  #dataUser = null;
   #dataCar = dataCar;
   #MinusAllMoney = null;
   #setterCarForDataUser = null;
@@ -23,7 +24,7 @@ export default class CarFieldPresenter {
   }
 
   init() {
-    this.#element = new ExpensesCarFieldView;
+    this.#element = new CarFieldView;
     render(this.#element, this.#container.element);
     this.#element.setCarFieldHandler(this.#handleCarField);
   }
@@ -34,11 +35,13 @@ export default class CarFieldPresenter {
     this.#carSelectElement.setCarCloseBtnHandler(this.#handleCloseBtnCarSelect);
     this.#carSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectCar);
     this.#carSelectElement.setSelectCarHandler(this.#handleSelectCar);
+    addOverlay();
   }
 
   #handleCloseBtnCarSelect = () => {
     remove(this.#carSelectElement);
     this.#element.setCarFieldHandler(this.#handleCarField);
+    removeOverlay();
   }
 
   #onEscKeyDownForSelectCar = (evt) => {
@@ -47,6 +50,7 @@ export default class CarFieldPresenter {
       remove(this.#carSelectElement);
       this.#element.setCarFieldHandler(this.#handleCarField);
       document.removeEventListener('keydown', this.#onEscKeyDownForSelectCar);
+      removeOverlay();
     }
   };
 
@@ -54,7 +58,7 @@ export default class CarFieldPresenter {
 
     remove(this.#carSelectElement);
     this.#element.setCarFieldHandler(this.#handleCarField);
-    let newElement = new ExpensesCarFieldView(evt.dataset.model);
+    let newElement = new CarFieldView(evt.dataset.model);
     replace(newElement, this.#element);
     this.#element = newElement;
     this.#element.setCarFieldHandler(this.#handleCarField);
@@ -63,6 +67,7 @@ export default class CarFieldPresenter {
     this.#setterCarForDataUser('carCredit', +evt.dataset.expenses);
     this.#setCreditItemCarCreditValue();
     console.log(this.#dataUser())
+    removeOverlay();
 
   }
 }
