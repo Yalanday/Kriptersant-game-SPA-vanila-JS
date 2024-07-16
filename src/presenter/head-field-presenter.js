@@ -166,17 +166,17 @@ export default class HeadFieldPresenter {
     this.#workFieldPresenter = new WorkFieldPresenter(this.#actualDataUser, this.#dataWork, this.#headFiledElement, this.#siteMainElement, this.#setCurrentPropertyUser, this.#setSalaryForRender);
     this.#workFieldPresenter.init();
 
-    // Банк - дочерний презентер
-    this.#bankFieldPresenter = new BankFieldPresenter(this.#headFiledElement);
-    this.#bankFieldPresenter.init();
+    // Тапай ДурКоин - дочерний презентер
+    this.#durCoinFieldPresenter = new DurCoinFieldPresenter(this.#actualDataUser, this.#headFiledElement, this.#setCurrentPropertyUser, this.#setDebitItemDurCoinFieldValue);
+    this.#durCoinFieldPresenter.init();
 
     // КриптоБыржа - дочерний презентер
     this.#cryptoFieldPresenter = new CryptoFieldPresenter(this.#headFiledElement);
     this.#cryptoFieldPresenter.init();
 
-    // Тапай ДурКоин - дочерний презентер
-    this.#durCoinFieldPresenter = new DurCoinFieldPresenter(this.#actualDataUser, this.#headFiledElement, this.#setCurrentPropertyUser, this.#setDebitItemDurCoinFieldValue);
-    this.#durCoinFieldPresenter.init();
+    // Банк - дочерний презентер
+    this.#bankFieldPresenter = new BankFieldPresenter(this.#headFiledElement);
+    this.#bankFieldPresenter.init();
 
     // Моя хата - дочерний презентер
     this.#homeFieldPresenter = new HomeFieldPresenter(this.#actualDataUser, this.#headFiledElement, this.#setDataMinusAllMoney, this.#setCurrentPropertyUser, this.#setCreditItemHomeCreditValue);

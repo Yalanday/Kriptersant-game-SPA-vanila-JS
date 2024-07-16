@@ -52,7 +52,6 @@ export default class DurCoinFieldPresenter {
   };
 
   #handleSelectDurCoin = (evt, countCoin) => {
-    console.log('tap tap dur coin');
     console.log(this.#dataUser());
     let newValueDurCoin = +this.#dataUser().durCoin + 1;
     this.#setCurrentPropertyUser('durCoin', +newValueDurCoin);
