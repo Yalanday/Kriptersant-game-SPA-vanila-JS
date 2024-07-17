@@ -19,6 +19,7 @@ import CreditItemHomeCreditView from "../view/footer/credit-item-home-credit-vie
 import DurCoinFieldPresenter from "./dur-coin-field-presenter";
 import DebitItemDurCoinStatusView from "../view/footer/debit-item-dur-coin-status-view";
 import ChartPresenter from "./chart-presenter";
+import DosugFieldPresenter from "./dosug-field-presenter";
 
 export default class HeadFieldPresenter {
   //данные
@@ -37,6 +38,7 @@ export default class HeadFieldPresenter {
   #homeFieldPresenter = null;
   #durCoinFieldPresenter = null;
   #chartPresenter = null;
+  #dosugFieldPresenter = null;
 
   //контейнеры
   #headFiledElement = null;
@@ -56,8 +58,8 @@ export default class HeadFieldPresenter {
   #creditItemHomeCreditElement = null;
   #debitItemDurCoinStatusElement = null;
 
-  constructor(dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer) {
-    // this.#dataUser = dataUser;
+  constructor(dataUser, dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer) {
+    this.#dataUser = dataUser;
     this.#dataWork = dataWork;
     this.#configChart = configChart;
     this.#siteMainElement = siteMainElement;
@@ -161,10 +163,10 @@ export default class HeadFieldPresenter {
     this.#debitItemDurCoinStatusElement = debitItemDurCoinStatusTempElement;
   }
 
-  init(startData) {
+  init() {
     //***************** HEADER *****************//
 
-    this.#dataUser = startData;
+    // this.#dataUser = startData;
 
     //статистика игровых дней
     this.#dayAfloatElement = new DayAfloatView(this.#dataUser);
@@ -205,6 +207,10 @@ export default class HeadFieldPresenter {
     // Любовь - дочерний презентер
     this.#loveFieldPresenter = new LoveFieldPresenter(this.#dataUser, this.#headFiledElement);
     this.#loveFieldPresenter.init();
+
+    // Мой досуг - дочерний презентер
+    this.#dosugFieldPresenter = new DosugFieldPresenter(this.#headFiledElement);
+    this.#dosugFieldPresenter.init();
 
     //***************** FOOTER *****************//
     // статистика доходов (левый блок) расходов (правый блок)

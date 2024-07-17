@@ -44,7 +44,9 @@ export const configChart = {
     hover: {
       onHover: function (e) {
         let point = this.getElementAtEvent(e);
-        if (point.length) e.target.style.cursor = 'pointer';
+        if (point.length) {
+          e.target.style.cursor = 'pointer';
+        }
         else e.target.style.cursor = 'default';
       }
     }
