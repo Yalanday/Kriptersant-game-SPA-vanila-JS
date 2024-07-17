@@ -72,14 +72,14 @@ export default class AppStartPresenter {
   nameUserElement = null;
   nameUserElementTemp = null;
 
-  #setNameUser() {
+  #setNameUser(data) {
 
       if (this.nameUserElement === null) {
-        this.nameUserElement = new NameUserView(this.#dataUser)
+        this.nameUserElement = new NameUserView(data)
         render(this.nameUserElement, this.#avatarNameContainer);
       }
       if (this.nameUserElement !== null) {
-        let newNameUserElement = new NameUserView(this.#dataUser);
+        let newNameUserElement = new NameUserView(data);
         replace(newNameUserElement, this.nameUserElement)
         this.nameUserElement = newNameUserElement;
       }
@@ -99,9 +99,8 @@ export default class AppStartPresenter {
 
     this.setAvatarUser();
     this.#setGenderUser();
-    this.#setNameUser();
 
-    this.#headPresenter = new HeadFieldPresenter(this.#dataUser, dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer);
+    this.#headPresenter = new HeadFieldPresenter(dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer);
   }
 
   #popupWelcomeButtonClickHandler = (element) => {
@@ -127,7 +126,7 @@ export default class AppStartPresenter {
 
   #popupAvatarButtonClickHandler = (element, imgSrc = 'no') => {
     this.#dataUser = {...this.#dataUser, 'avatar': Number(imgSrc)};
-    this.setAvatarUser()
+    this.setAvatarUser();
     remove(element);
     this.#inputNamePopupElement = new InputNameView;
     render(this.#inputNamePopupElement, this.#startPopupElement.element);
@@ -136,9 +135,12 @@ export default class AppStartPresenter {
 
   #popupInputNameButtonClickHandler = (element, name) => {
     if (name !== null) this.#dataUser = {...this.#dataUser, 'name': name};
-    this.#setNameUser();
     remove(element);
     remove(this.#startPopupElement);
-    this.#headPresenter.init();
+
+    this.#setNameUser(this.#dataUser);
+
+    this.#headPresenter.init(this.#dataUser);
+    console.log(this.#dataUser)
   }
 }

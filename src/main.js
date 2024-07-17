@@ -13,13 +13,13 @@ export const dayAfloatContainer = siteHeaderElement.querySelector('.header__righ
 export const siteMainElement = bodyElement.querySelector('.main__container');
 export const siteFooterElement = bodyElement.querySelector('.footer__container');
 
-const headFieldPresenter = new HeadFieldPresenter(dataUser, dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer);
+// const headFieldPresenter = new HeadFieldPresenter(dataUser, dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer);
 // const appStartPresenter = new AppStartPresenter(dataUser, bodyElement, avatarNameContainer, headFieldPresenter);
-// const appStartPresenter = new AppStartPresenter(dataUser, bodyElement, avatarNameContainer);
+const appStartPresenter = new AppStartPresenter(dataUser, bodyElement, avatarNameContainer);
 
 
-// appStartPresenter.init();
-headFieldPresenter.init();
+appStartPresenter.init();
+// headFieldPresenter.init();
 
 
 

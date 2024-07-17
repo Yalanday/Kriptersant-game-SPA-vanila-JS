@@ -2,12 +2,17 @@ import {render, replace, remove} from "../framework/render";
 import {LoveFieldView} from "../view/head-field/love-field-view";
 import {LoveSelectedView} from "../view/head-field/love-selected-view";
 import {addOverlay, removeOverlay} from "../utils/utils";
+import Swiper from "swiper";
+import { Navigation, Pagination } from 'swiper/modules';
+
 
 
 export default class LoveFieldPresenter {
   #element = null;
   #container = null;
   #dataUser = null;
+  #swiperElement = null;
+  #swiper = null;
 
   #loveSelectElement = null;
 
@@ -29,6 +34,21 @@ export default class LoveFieldPresenter {
     this.#loveSelectElement.setLoveCloseBtnHandler(this.#handleCloseBtnBankSelect);
     this.#loveSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectLove);
     // this.#bankSelectElement.setSelectCarHandler(this.#handleSelectCar);
+
+    this.#swiperElement = this.#loveSelectElement.element.querySelector('.swiper_main');
+    this.#swiper = new Swiper(this.#swiperElement, {
+      modules: [Navigation, Pagination],
+      spaceBetween: 10,
+      loop: true,
+      pagination: {
+        el: '.swiper-pagination',
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    })
+
     addOverlay();
   }
 

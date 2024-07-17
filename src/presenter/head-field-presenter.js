@@ -56,8 +56,8 @@ export default class HeadFieldPresenter {
   #creditItemHomeCreditElement = null;
   #debitItemDurCoinStatusElement = null;
 
-  constructor(dataUser, dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer) {
-    this.#dataUser = dataUser;
+  constructor(dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer) {
+    // this.#dataUser = dataUser;
     this.#dataWork = dataWork;
     this.#configChart = configChart;
     this.#siteMainElement = siteMainElement;
@@ -161,8 +161,10 @@ export default class HeadFieldPresenter {
     this.#debitItemDurCoinStatusElement = debitItemDurCoinStatusTempElement;
   }
 
-  init() {
+  init(startData) {
     //***************** HEADER *****************//
+
+    this.#dataUser = startData;
 
     //статистика игровых дней
     this.#dayAfloatElement = new DayAfloatView(this.#dataUser);
