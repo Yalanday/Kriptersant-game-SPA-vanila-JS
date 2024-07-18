@@ -2,6 +2,7 @@ import {render, replace, remove} from "../framework/render";
 import {DurCoinFieldView} from "../view/head-field/dur-coin-field-view";
 import {DurCoinSelectedView} from "../view/head-field/dur-coin-selected-view";
 import {addOverlay, removeOverlay} from "../utils/utils";
+import {audioSoundElement} from "../main";
 
 export default class DurCoinFieldPresenter {
   #element = null;
@@ -12,12 +13,18 @@ export default class DurCoinFieldPresenter {
 
   #durCoinSelectElement = null;
 
-
   constructor(dataUser, container, setCurrentPropertyUser, setDebitItemDurCoinFieldValue) {
     this.#dataUser = dataUser;
     this.#container = container;
     this.#setCurrentPropertyUser = setCurrentPropertyUser;
     this.#setDebitItemDurCoinFieldValue = setDebitItemDurCoinFieldValue;
+  }
+
+  #blockSelectFieldElement = () => {
+    if (this.#dataUser().dayCountDurCoin >= 10) {
+      this.#durCoinSelectElement.element.querySelector('.dur-coin-tap-button').style.pointerEvents = 'none';
+      this.#durCoinSelectElement.element.querySelector('.dur-coin-tap-button').style.opacity = '0.5';
+    }
   }
 
   init() {
@@ -33,6 +40,8 @@ export default class DurCoinFieldPresenter {
     this.#durCoinSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectDurCoin);
     addOverlay();
     this.#durCoinSelectElement.setDurCoinSelectHandler(this.#handleSelectDurCoin);
+
+    this.#blockSelectFieldElement();
   }
 
   #handleCloseBtnDurCoinSelect = () => {
@@ -53,7 +62,16 @@ export default class DurCoinFieldPresenter {
 
   #handleSelectDurCoin = (evt, countCoin) => {
     let newValueDurCoin = +this.#dataUser().durCoin + 1;
+    let newValueDayCountDurCoin = +this.#dataUser().dayCountDurCoin + 1;
     this.#setCurrentPropertyUser('durCoin', +newValueDurCoin);
+    this.#setCurrentPropertyUser('dayCountDurCoin', +newValueDayCountDurCoin);
+
+    this.#blockSelectFieldElement();
+
     this.#setDebitItemDurCoinFieldValue();
+
+    if (+this.#dataUser().dayCountDurCoin === 10) {
+      audioSoundElement.play();
+    }
   }
 }

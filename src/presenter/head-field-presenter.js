@@ -18,8 +18,13 @@ import CreditItemCarCreditView from "../view/footer/credit-item-car-credit-view"
 import CreditItemHomeCreditView from "../view/footer/credit-item-home-credit-view";
 import DurCoinFieldPresenter from "./dur-coin-field-presenter";
 import DebitItemDurCoinStatusView from "../view/footer/debit-item-dur-coin-status-view";
+import DebitItemBikCoinStatusView from "../view/footer/debit-item-bik-coin-status-view";
+import DebitItemDollarStatusView from "../view/footer/debit-item-dollar-status-view";
+import DebitItemOilStatusView from "../view/footer/debit-item-oil-status-view";
+import DebitItemGoldStatusView from "../view/footer/debit-item-gold-status-view";
 import ChartPresenter from "./chart-presenter";
 import DosugFieldPresenter from "./dosug-field-presenter";
+
 
 export default class HeadFieldPresenter {
   //данные
@@ -57,6 +62,10 @@ export default class HeadFieldPresenter {
   #creditItemCarCreditElement = null;
   #creditItemHomeCreditElement = null;
   #debitItemDurCoinStatusElement = null;
+  #debitItemBikCoinStatusElement = null;
+  #debitItemDollarStatusElement = null;
+  #debitItemOilStatusElement = null;
+  #debitItemGoldStatusElement = null;
 
   constructor(dataUser, dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer) {
     this.#dataUser = dataUser;
@@ -92,7 +101,13 @@ export default class HeadFieldPresenter {
   //минусация при покупках
   #setDataMinusAllMoney = (sumMinus = 0) => {
     let currentCryptans = this.#dataUser.cryptans;
-    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans - sumMinus}
+    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans - Number(sumMinus)}
+    this.#setStatisticAllMoney()
+  }
+
+  #setDataPlusAllMoney = (sumPlus = 0) => {
+    let currentCryptans = this.#dataUser.cryptans;
+    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans + Number(sumPlus)}
     this.#setStatisticAllMoney()
   }
 
@@ -105,9 +120,6 @@ export default class HeadFieldPresenter {
       }
     }
     this.#dataUser = {...state};
-    console.log('Это проверка изменений глобоальных данных')
-    console.log(this.#dataUser)
-    console.log(this.#configChart)
   }
 
 // счетчик дней и актуализация статистики баланса
@@ -115,12 +127,18 @@ export default class HeadFieldPresenter {
     setInterval(() => {
       ++this.#count;
       this.#dataUser = {...this.#dataUser, days: this.#count};
+      this.#dataUser = {...this.#dataUser, dayCountDurCoin: 0};
+      this.#dataUser = {...this.#dataUser, dayCountBikCoin: 0};
+      this.#dataUser = {...this.#dataUser, dayCountDollar: 0};
+      this.#dataUser = {...this.#dataUser, dayCountOil: 0};
+      this.#dataUser = {...this.#dataUser, dayCountGold: 0};
       let dayAfloatTempElement = new DayAfloatView(this.#dataUser);
       replace(dayAfloatTempElement, this.#dayAfloatElement);
       this.#dayAfloatElement = dayAfloatTempElement;
       this.#setStatisticAllMoney();
-
       this.#setNewDataConfigChart()
+
+      console.log(this.#configChart)
 
     }, daySize);
   }
@@ -157,10 +175,35 @@ export default class HeadFieldPresenter {
     this.#creditItemHomeCreditElement = CreditItemHomeCreditTempElement;
   }
 
+  // Перерисовка всех видов крипты - 5 штук
   #setDebitItemDurCoinFieldValue = () => {
     let debitItemDurCoinStatusTempElement = new DebitItemDurCoinStatusView(this.#dataUser);
     replace(debitItemDurCoinStatusTempElement, this.#debitItemDurCoinStatusElement);
     this.#debitItemDurCoinStatusElement = debitItemDurCoinStatusTempElement;
+  }
+
+  #setDebitItemBikCoinFieldValue = () => {
+    let debitItemBikCoinStatusTempElement = new DebitItemBikCoinStatusView(this.#dataUser);
+    replace(debitItemBikCoinStatusTempElement, this.#debitItemBikCoinStatusElement);
+    this.#debitItemBikCoinStatusElement = debitItemBikCoinStatusTempElement;
+  }
+
+  #setDebitItemDollarFieldValue = () => {
+    let debitItemDollarStatusTempElement = new DebitItemDollarStatusView(this.#dataUser);
+    replace(debitItemDollarStatusTempElement, this.#debitItemDollarStatusElement);
+    this.#debitItemDollarStatusElement = debitItemDollarStatusTempElement;
+  }
+
+  #setDebitItemOilFieldValue = () => {
+    let debitItemOilStatusTempElement = new DebitItemOilStatusView(this.#dataUser);
+    replace(debitItemOilStatusTempElement, this.#debitItemOilStatusElement);
+    this.#debitItemOilStatusElement = debitItemOilStatusTempElement;
+  }
+
+  #setDebitItemGoldFieldValue = () => {
+    let debitItemGoldStatusTempElement = new DebitItemGoldStatusView(this.#dataUser);
+    replace(debitItemGoldStatusTempElement, this.#debitItemGoldStatusElement);
+    this.#debitItemGoldStatusElement = debitItemGoldStatusTempElement;
   }
 
   init() {
@@ -189,7 +232,7 @@ export default class HeadFieldPresenter {
     this.#durCoinFieldPresenter.init();
 
     // КриптоБыржа - дочерний презентер
-    this.#cryptoFieldPresenter = new CryptoFieldPresenter(this.#headFiledElement);
+    this.#cryptoFieldPresenter = new CryptoFieldPresenter(this.#actualDataUser, this.#configChart, this.#headFiledElement, this.#setCurrentPropertyUser, this.#setDebitItemDurCoinFieldValue, this.#setDebitItemBikCoinFieldValue, this.#setDebitItemDollarFieldValue, this.#setDebitItemOilFieldValue, this.#setDebitItemGoldFieldValue, this.#setDataMinusAllMoney, this.#setDataPlusAllMoney);
     this.#cryptoFieldPresenter.init();
 
     // Банк - дочерний презентер
@@ -237,6 +280,22 @@ export default class HeadFieldPresenter {
     this.#debitItemDurCoinStatusElement = new DebitItemDurCoinStatusView(this.#dataUser);
     render(this.#debitItemDurCoinStatusElement, this.#footerDebitListElement.element);
 
+    // БыкКоины на счету
+    this.#debitItemBikCoinStatusElement = new DebitItemBikCoinStatusView(this.#dataUser);
+    render(this.#debitItemBikCoinStatusElement, this.#footerDebitListElement.element);
+
+    // Доллары на счету
+    this.#debitItemDollarStatusElement = new DebitItemDollarStatusView(this.#dataUser);
+    render(this.#debitItemDollarStatusElement, this.#footerDebitListElement.element);
+
+    // Нефти на счету
+    this.#debitItemOilStatusElement = new DebitItemOilStatusView(this.#dataUser);
+    render(this.#debitItemOilStatusElement, this.#footerDebitListElement.element);
+
+    // Золота на счету
+    this.#debitItemGoldStatusElement = new DebitItemGoldStatusView(this.#dataUser);
+    render(this.#debitItemGoldStatusElement, this.#footerDebitListElement.element);
+
     // Расход - credit-list
     this.#footerCreditListElement = new FooterCreditListView();
     render(this.#footerCreditListElement, this.#rightBlockFooterElement.element);
@@ -251,7 +310,7 @@ export default class HeadFieldPresenter {
 
     // График цен на крипту
 
-    this.#chartPresenter = new ChartPresenter(this.#dataUser, this.#configChart, this.#siteFooterElement.parentElement, );
+    this.#chartPresenter = new ChartPresenter(this.#dataUser, this.#configChart, this.#siteFooterElement.parentElement.querySelector('.footer__container-canvas'), );
     this.#chartPresenter.init();
   }
 }

@@ -3,13 +3,26 @@ import {createCryptoSelectTemplate} from "./templates/create-crypto-select-templ
 
 export class CryptoSelectedView extends AbstractView {
 
-  constructor() {
+  #configChart = null;
+
+  constructor(configChart) {
     super();
+    this.#configChart = configChart;
   }
 
-  setCryptoSelectHandler(callback) {
+  setSelectCryptoHandler(callback) {
     this._callback.cryptoSelectClickHandler = callback;
-    this.element.addEventListener('click', this.#cryptoSelectClickHandler);
+    this.element.querySelectorAll('.work-select-field').forEach((el) => {
+      el.addEventListener('click', this.#cryptoSelectClickHandler)
+    });
+  }
+
+  #cryptoSelectClickHandler = (evt) => {
+    let price = evt.target.dataset.price;
+    let sale = evt.target.dataset.sale;
+    let type = evt.target.dataset.type;
+    console.log(type)
+    this._callback.cryptoSelectClickHandler(evt, price, sale, type);
   }
 
   setCryptoCloseBtnHandler(callback) {
@@ -26,19 +39,12 @@ export class CryptoSelectedView extends AbstractView {
     this._callback.closeCryptoBtnClickHandler();
   }
 
-
-  #cryptoSelectClickHandler = (evt) => {
-    if (evt.target.classList.contains('work-select-field')) {
-      this._callback.cryptoSelectClickHandler(evt.target);
-    }
-  }
-
   #escKeydownCryptoSelectHandler = (evt) => {
     this._callback.escKeydownCryptoSelectHandler(evt);
   }
 
 
   get template() {
-    return createCryptoSelectTemplate();
+    return createCryptoSelectTemplate(this.#configChart);
   }
 }

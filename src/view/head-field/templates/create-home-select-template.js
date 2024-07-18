@@ -1,5 +1,5 @@
 const createItemHomeSelect = (model, price, expenses, index) => {
-    return `<div style="background-image: url('./images/home/home-${index+1}.jpg');" data-model="${model}" data-price="${price}" data-expenses="${expenses}"class="head-field__child-field work-select-field">${price}</div>`;
+    return `<div style="background-image: url('/images/home/home-${index+1}.jpg');" data-model="${model}" data-price="${price}" data-expenses="${expenses}"class="head-field__child-field work-select-field">${price}</div>`;
 
 }
 

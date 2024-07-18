@@ -12,6 +12,7 @@ export const avatarNameContainer = siteHeaderElement.querySelector('.header__use
 export const dayAfloatContainer = siteHeaderElement.querySelector('.header__right-section');
 export const siteMainElement = bodyElement.querySelector('.main__container');
 export const siteFooterElement = bodyElement.querySelector('.footer__container');
+export const audioSoundElement = document.getElementById('audio');
 
 const headFieldPresenter = new HeadFieldPresenter(dataUser, dataWork, configChart, siteMainElement, siteFooterElement, dayAfloatContainer);
 // const appStartPresenter = new AppStartPresenter(dataUser, bodyElement, avatarNameContainer, headFieldPresenter);
