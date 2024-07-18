@@ -1,6 +1,6 @@
 import {overlayBodyElement} from "../main";
 
-const DAY_SIZE = 30000;
+const DAY_SIZE = 20000;
 
 const addOverlay = () => {
   overlayBodyElement.classList.add("active");

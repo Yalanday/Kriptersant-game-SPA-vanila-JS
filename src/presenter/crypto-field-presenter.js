@@ -16,13 +16,12 @@ export default class CryptoFieldPresenter {
   #setDebitItemDollarFieldValue = null;
   #setDebitItemOilFieldValue = null;
   #setDebitItemGoldFieldValue = null;
-  #setDataMinusAllMoney = null;
-  #setDataPlusAllMoney = null;
+  #setStatisticAllMoneyForCryptoBit = null;
+  #setStatisticMinusAllMoneyForCryptoBit = null;
 
   #cryptoSelectElement = null;
 
-
-  constructor(dataUser, configChart, container, setCurrentPropertyUser, setDebitItemDurCoinFieldValue, setDebitItemBikCoinFieldValue, setDebitItemDollarFieldValue, setDebitItemOilFieldValue, setDebitItemGoldFieldValue, setDataMinusAllMoney, setDataPlusAllMoney) {
+  constructor(dataUser, configChart, container, setCurrentPropertyUser, setDebitItemDurCoinFieldValue, setDebitItemBikCoinFieldValue, setDebitItemDollarFieldValue, setDebitItemOilFieldValue, setDebitItemGoldFieldValue,  setStatisticAllMoneyForCryptoBit, setStatisticMinusAllMoneyForCryptoBit) {
     this.#dataUser = dataUser;
     this.#configChart = configChart;
     this.#container = container;
@@ -32,8 +31,8 @@ export default class CryptoFieldPresenter {
     this.#setDebitItemDollarFieldValue = setDebitItemDollarFieldValue;
     this.#setDebitItemOilFieldValue = setDebitItemOilFieldValue;
     this.#setDebitItemGoldFieldValue = setDebitItemGoldFieldValue;
-    this.#setDataMinusAllMoney = setDataMinusAllMoney;
-    this.#setDataPlusAllMoney = setDataPlusAllMoney;
+    this.#setStatisticAllMoneyForCryptoBit = setStatisticAllMoneyForCryptoBit;
+    this.#setStatisticMinusAllMoneyForCryptoBit = setStatisticMinusAllMoneyForCryptoBit;
   }
 
   init() {
@@ -75,13 +74,13 @@ export default class CryptoFieldPresenter {
       let newValueDayCountDurCoin = +this.#dataUser().dayCountDurCoin + 1;
       this.#setCurrentPropertyUser('durCoin', +newValueDurCoin);
       this.#setCurrentPropertyUser('dayCountDurCoin', +newValueDayCountDurCoin);
-      this.#setDataMinusAllMoney(price);
+      this.#setStatisticMinusAllMoneyForCryptoBit(price);
       this.#setDebitItemDurCoinFieldValue();
     }
     if (sale === 'true' && type === 'durCoin' && +this.#dataUser().durCoin > 0) {
       let newValueDurCoin = +this.#dataUser().durCoin - 1;
       this.#setCurrentPropertyUser('durCoin', +newValueDurCoin);
-      this.#setDataPlusAllMoney(price);
+      this.#setStatisticAllMoneyForCryptoBit(price);
       this.#setDebitItemDurCoinFieldValue();
     }
 
@@ -91,13 +90,13 @@ export default class CryptoFieldPresenter {
       let newValueDayCountBikCoin = +this.#dataUser().dayCountBikCoin + 1;
       this.#setCurrentPropertyUser('bikCoin', +newValueBikCoin);
       this.#setCurrentPropertyUser('dayCountBikCoin', +newValueDayCountBikCoin);
-      this.#setDataMinusAllMoney(price);
+      this.#setStatisticMinusAllMoneyForCryptoBit(price);
       this.#setDebitItemBikCoinFieldValue();
     }
     if (sale === 'true' && type === 'bikCoin' && +this.#dataUser().bikCoin > 0) {
       let newValueBikCoin = +this.#dataUser().bikCoin - 1;
       this.#setCurrentPropertyUser('bikCoin', +newValueBikCoin);
-      this.#setDataPlusAllMoney(price);
+      this.#setStatisticAllMoneyForCryptoBit(price);
       this.#setDebitItemBikCoinFieldValue();
     }
 
@@ -107,14 +106,14 @@ export default class CryptoFieldPresenter {
       let newValueDayCountDollar = +this.#dataUser().dayCountDollar + 1;
       this.#setCurrentPropertyUser('dollar', +newValueDollar);
       this.#setCurrentPropertyUser('dayCountDollar', +newValueDayCountDollar);
-      this.#setDataMinusAllMoney(price);
+      this.#setStatisticMinusAllMoneyForCryptoBit(price);
       this.#setDebitItemDollarFieldValue();
     }
     if (sale === 'true' && type === 'dollar' && +this.#dataUser().dollar > 0) {
       console.log('saleeeeee')
       let newValueDollar = +this.#dataUser().dollar - 1;
       this.#setCurrentPropertyUser('dollar', +newValueDollar);
-      this.#setDataPlusAllMoney(price);
+      this.#setStatisticAllMoneyForCryptoBit(price);
       this.#setDebitItemDollarFieldValue();
     }
 
@@ -124,14 +123,14 @@ export default class CryptoFieldPresenter {
       let newValueDayCountOil = +this.#dataUser().dayCountOil + 1;
       this.#setCurrentPropertyUser('oil', +newValueOil);
       this.#setCurrentPropertyUser('dayCountOil', +newValueDayCountOil);
-      this.#setDataMinusAllMoney(price);
+      this.#setStatisticMinusAllMoneyForCryptoBit(price);
       this.#setDebitItemOilFieldValue();
     }
     if (sale === 'true' && type === 'oil' && +this.#dataUser().oil > 0) {
       console.log('saleeeeee')
       let newValueOil = +this.#dataUser().oil - 1;
       this.#setCurrentPropertyUser('oil', +newValueOil);
-      this.#setDataPlusAllMoney(price);
+      this.#setStatisticAllMoneyForCryptoBit(price);
       this.#setDebitItemOilFieldValue();
     }
 
@@ -141,14 +140,14 @@ export default class CryptoFieldPresenter {
       let newValueDayCountGold = +this.#dataUser().dayCountGold + 1;
       this.#setCurrentPropertyUser('gold', +newValueGold);
       this.#setCurrentPropertyUser('dayCountGold', +newValueDayCountGold);
-      this.#setDataMinusAllMoney(price);
+      this.#setStatisticMinusAllMoneyForCryptoBit(price);
       this.#setDebitItemGoldFieldValue();
     }
     if (sale === 'true' && type === 'gold' && +this.#dataUser().gold > 0) {
       console.log('saleeeeee')
       let newValueGold = +this.#dataUser().gold - 1;
       this.#setCurrentPropertyUser('gold', +newValueGold);
-      this.#setDataPlusAllMoney(price);
+      this.#setStatisticAllMoneyForCryptoBit(price);
       this.#setDebitItemGoldFieldValue();
     }
 

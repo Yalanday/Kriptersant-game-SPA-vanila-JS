@@ -1,6 +1,7 @@
 import {render, replace, remove} from "../framework/render";
 import {HeadFildView} from "../view/head-field/head-field-view";
 import DebitItemCryptansStatusView from "../view/footer/debit-item-cryptans-status-view";
+import DebitItemCryptansPlusStatusView from "../view/footer/debit-item-cryptans-plus-status-view";
 import DebitItemSalaryStatusView from "../view/footer/debit-item-salary-status-view";
 import DayAfloatView from "../view/header/dat-afloay-view";
 import {DAY_SIZE, getRandomInRange} from "../utils/utils";
@@ -16,6 +17,8 @@ import FooterCreditListView from "../view/footer/footer-credit-list-view";
 import FooterDebitListView from "../view/footer/footer-debit-list-view";
 import CreditItemCarCreditView from "../view/footer/credit-item-car-credit-view";
 import CreditItemHomeCreditView from "../view/footer/credit-item-home-credit-view";
+import CreditItem3dayCreditView from "../view/footer/credit-item-3day-credit-view";
+import CreditItem10dayCreditView from "../view/footer/credit-item-10day-credit-view";
 import DurCoinFieldPresenter from "./dur-coin-field-presenter";
 import DebitItemDurCoinStatusView from "../view/footer/debit-item-dur-coin-status-view";
 import DebitItemBikCoinStatusView from "../view/footer/debit-item-bik-coin-status-view";
@@ -31,8 +34,6 @@ export default class HeadFieldPresenter {
   #dataUser = null;
   #dataWork = null;
   #configChart = null;
-
-  //overlay for modal
 
   //дочерние презентеры
   #workFieldPresenter = null;
@@ -53,6 +54,7 @@ export default class HeadFieldPresenter {
 
   //создаваемые элементы
   #statisticAllMoneyElement = null;
+  #statisticMoneyPlusElement = null;
   #salaryStatusElement = null;
   #dayAfloatElement = null;
   #leftBlockFooterElement = null;
@@ -61,6 +63,8 @@ export default class HeadFieldPresenter {
   #footerDebitListElement = null;
   #creditItemCarCreditElement = null;
   #creditItemHomeCreditElement = null;
+  #creditItem3dayCreditElement = null;
+  #creditItem10dayCreditElement = null;
   #debitItemDurCoinStatusElement = null;
   #debitItemBikCoinStatusElement = null;
   #debitItemDollarStatusElement = null;
@@ -78,9 +82,9 @@ export default class HeadFieldPresenter {
 
   // передаваемый установщик зарплаты
   #setSalaryForRender = (index = 0) => {
-      let salaryStatusTempElement = new DebitItemSalaryStatusView(this.#dataWork[index].salary);
-      replace(salaryStatusTempElement, this.#salaryStatusElement);
-      this.#salaryStatusElement = salaryStatusTempElement;
+    let salaryStatusTempElement = new DebitItemSalaryStatusView(this.#dataWork[index].salary);
+    replace(salaryStatusTempElement, this.#salaryStatusElement);
+    this.#salaryStatusElement = salaryStatusTempElement;
   }
 
   #count = 0;
@@ -122,6 +126,19 @@ export default class HeadFieldPresenter {
     this.#dataUser = {...state};
   }
 
+  // обратный отсчет банковских дней
+  #setDayExperienceBank = (property, propertyMoney) => {
+    if (this.#dataUser[property] > 0) {
+      let newValue = this.#dataUser[property] - 1;
+      this.#dataUser = {...this.#dataUser, [property]: newValue}
+    }
+
+    if (this.#dataUser[property] === 0) this.#dataUser = {...this.#dataUser, [propertyMoney]: 0}
+
+    if (property === 'bankCredit3DayCount' && this.#dataUser[property] === 0) this.#setCreditItemCredit3DaysValue();
+    if (property === 'bankCredit10DayCount' && this.#dataUser[property] === 0) this.#setCreditItemCredit10DaysValue();
+  }
+
 // счетчик дней и актуализация статистики баланса
   setDayExperience(daySize = DAY_SIZE) {
     setInterval(() => {
@@ -132,20 +149,23 @@ export default class HeadFieldPresenter {
       this.#dataUser = {...this.#dataUser, dayCountDollar: 0};
       this.#dataUser = {...this.#dataUser, dayCountOil: 0};
       this.#dataUser = {...this.#dataUser, dayCountGold: 0};
+
+      this.#setDayExperienceBank('bankCredit3DayCount', 'bankCredit3dSum');
+      this.#setDayExperienceBank('bankCredit10DayCount', 'bankCredit10dSum');
+      this.#setDayExperienceBank('bankDeposit3DayCount', 'bankDeposit3dSum');
+      this.#setDayExperienceBank('bankDeposit10DayCount', 'bankDeposit10dSum');
+
       let dayAfloatTempElement = new DayAfloatView(this.#dataUser);
       replace(dayAfloatTempElement, this.#dayAfloatElement);
       this.#dayAfloatElement = dayAfloatTempElement;
       this.#setStatisticAllMoney();
       this.#setNewDataConfigChart()
 
-      console.log(this.#configChart)
-
     }, daySize);
   }
 
   setGenderOfAppStartPresenter(data) {
     this.#dataUser = {...data};
-    console.log(this.#dataUser);
   }
 
   //актуализация статистики баланса
@@ -154,8 +174,36 @@ export default class HeadFieldPresenter {
     let currentSalaty = this.#dataUser.salary;
     let currentCarCredit = this.#dataUser.carCredit;
     let currentHomeCredit = this.#dataUser.homeCredit;
-    let allCredit = currentCarCredit + currentHomeCredit;
-    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans + currentSalaty - allCredit}
+    let current3dayCredit = this.#dataUser.bankCredit3dSum;
+    let current10dayCredit = this.#dataUser.bankCredit10dSum;
+    let bankDeposit3dSum = this.#dataUser.bankDeposit3dSum;
+    let bankDeposit10dSum = this.#dataUser.bankDeposit10dSum;
+    let allCredit = currentCarCredit + currentHomeCredit + current3dayCredit + current10dayCredit;
+    let allDeposit = bankDeposit3dSum + bankDeposit10dSum;
+
+    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans + currentSalaty - allCredit + allDeposit};
+    this.#dataUser = {...this.#dataUser, cryptansPlus: allDeposit + currentSalaty};
+    console.log(this.#dataUser)
+    let statisticAllMoneyTempElement = new DebitItemCryptansStatusView(this.#dataUser);
+    replace(statisticAllMoneyTempElement, this.#statisticAllMoneyElement);
+    this.#statisticAllMoneyElement = statisticAllMoneyTempElement;
+
+    let statisticMoneyPlusTempElement = new DebitItemCryptansPlusStatusView(this.#dataUser);
+    replace(statisticMoneyPlusTempElement, this.#statisticMoneyPlusElement);
+    this.#statisticMoneyPlusElement = statisticMoneyPlusTempElement;
+  }
+
+  #setStatisticAllMoneyForCryptoBit = (coin) => {
+    let currentCryptans = this.#dataUser.cryptans;
+    this.#dataUser = {...this.#dataUser, cryptans: Number(currentCryptans) + Number(coin)};
+    let statisticAllMoneyTempElement = new DebitItemCryptansStatusView(this.#dataUser);
+    replace(statisticAllMoneyTempElement, this.#statisticAllMoneyElement);
+    this.#statisticAllMoneyElement = statisticAllMoneyTempElement;
+  }
+
+  #setStatisticMinusAllMoneyForCryptoBit = (coin) => {
+    let currentCryptans = this.#dataUser.cryptans;
+    this.#dataUser = {...this.#dataUser, cryptans: Number(currentCryptans) - Number(coin)};
     let statisticAllMoneyTempElement = new DebitItemCryptansStatusView(this.#dataUser);
     replace(statisticAllMoneyTempElement, this.#statisticAllMoneyElement);
     this.#statisticAllMoneyElement = statisticAllMoneyTempElement;
@@ -173,6 +221,18 @@ export default class HeadFieldPresenter {
     let CreditItemHomeCreditTempElement = new CreditItemHomeCreditView(this.#dataUser);
     replace(CreditItemHomeCreditTempElement, this.#creditItemHomeCreditElement);
     this.#creditItemHomeCreditElement = CreditItemHomeCreditTempElement;
+  }
+
+  #setCreditItemCredit3DaysValue = () => {
+    let creditItem3dayCreditTempElement = new CreditItem3dayCreditView(this.#actualDataUser);
+    replace(creditItem3dayCreditTempElement, this.#creditItem3dayCreditElement);
+    this.#creditItem3dayCreditElement = creditItem3dayCreditTempElement;
+  }
+
+  #setCreditItemCredit10DaysValue = () => {
+    let creditItem10dayCreditTempElement = new CreditItem10dayCreditView(this.#actualDataUser);
+    replace(creditItem10dayCreditTempElement, this.#creditItem10dayCreditElement);
+    this.#creditItem10dayCreditElement = creditItem10dayCreditTempElement;
   }
 
   // Перерисовка всех видов крипты - 5 штук
@@ -206,6 +266,7 @@ export default class HeadFieldPresenter {
     this.#debitItemGoldStatusElement = debitItemGoldStatusTempElement;
   }
 
+
   init() {
     //***************** HEADER *****************//
 
@@ -232,11 +293,11 @@ export default class HeadFieldPresenter {
     this.#durCoinFieldPresenter.init();
 
     // КриптоБыржа - дочерний презентер
-    this.#cryptoFieldPresenter = new CryptoFieldPresenter(this.#actualDataUser, this.#configChart, this.#headFiledElement, this.#setCurrentPropertyUser, this.#setDebitItemDurCoinFieldValue, this.#setDebitItemBikCoinFieldValue, this.#setDebitItemDollarFieldValue, this.#setDebitItemOilFieldValue, this.#setDebitItemGoldFieldValue, this.#setDataMinusAllMoney, this.#setDataPlusAllMoney);
+    this.#cryptoFieldPresenter = new CryptoFieldPresenter(this.#actualDataUser, this.#configChart, this.#headFiledElement, this.#setCurrentPropertyUser, this.#setDebitItemDurCoinFieldValue, this.#setDebitItemBikCoinFieldValue, this.#setDebitItemDollarFieldValue, this.#setDebitItemOilFieldValue, this.#setDebitItemGoldFieldValue, this.#setStatisticAllMoneyForCryptoBit, this.#setStatisticMinusAllMoneyForCryptoBit);
     this.#cryptoFieldPresenter.init();
 
     // Банк - дочерний презентер
-    this.#bankFieldPresenter = new BankFieldPresenter(this.#headFiledElement);
+    this.#bankFieldPresenter = new BankFieldPresenter(this.#actualDataUser, this.#headFiledElement, this.#setCurrentPropertyUser, this.#setDataMinusAllMoney, this.#setDataPlusAllMoney, this.#setCreditItemCredit3DaysValue, this.#setCreditItemCredit10DaysValue);
     this.#bankFieldPresenter.init();
 
     // Моя хата - дочерний презентер
@@ -276,6 +337,10 @@ export default class HeadFieldPresenter {
     this.#salaryStatusElement = new DebitItemSalaryStatusView;
     render(this.#salaryStatusElement, this.#footerDebitListElement.element);
 
+    // Дохо в день
+    this.#statisticMoneyPlusElement = new DebitItemCryptansPlusStatusView(this.#dataUser);
+    render(this.#statisticMoneyPlusElement, this.#footerDebitListElement.element);
+
     // Дуркоины на счету
     this.#debitItemDurCoinStatusElement = new DebitItemDurCoinStatusView(this.#dataUser);
     render(this.#debitItemDurCoinStatusElement, this.#footerDebitListElement.element);
@@ -308,9 +373,17 @@ export default class HeadFieldPresenter {
     this.#creditItemHomeCreditElement = new CreditItemHomeCreditView(this.#actualDataUser);
     render(this.#creditItemHomeCreditElement, this.#footerCreditListElement.element);
 
+    // Платеж по 3 дн. кредиту
+    this.#creditItem3dayCreditElement = new CreditItem3dayCreditView(this.#actualDataUser);
+    render(this.#creditItem3dayCreditElement, this.#footerCreditListElement.element);
+
+    // Платеж по 10 дн. кредиту
+    this.#creditItem10dayCreditElement = new CreditItem10dayCreditView(this.#actualDataUser);
+    render(this.#creditItem10dayCreditElement, this.#footerCreditListElement.element);
+
     // График цен на крипту
 
-    this.#chartPresenter = new ChartPresenter(this.#dataUser, this.#configChart, this.#siteFooterElement.parentElement.querySelector('.footer__container-canvas'), );
+    this.#chartPresenter = new ChartPresenter(this.#dataUser, this.#configChart, this.#siteFooterElement.parentElement.querySelector('.footer__container-canvas'),);
     this.#chartPresenter.init();
   }
 }

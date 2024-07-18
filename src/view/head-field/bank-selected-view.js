@@ -3,13 +3,34 @@ import {createBankSelectTemplate} from "./templates/create-bank-select-template"
 
 export class BankSelectedView extends AbstractView {
 
-  constructor() {
+  #dataUser = null;
+
+  constructor(dataUser) {
     super();
+    this.#dataUser = dataUser;
   }
 
-  setBankSelectHandler(callback) {
+  setSelectBankHandler(callback) {
     this._callback.bankSelectClickHandler = callback;
-    this.element.addEventListener('click', this.#bankSelectClickHandler);
+    this.element.querySelectorAll('.work-select-field').forEach((el) => {
+      el.addEventListener('click', this.#bankSelectClickHandler);
+      if (Number(el.querySelector('.container-dataset').dataset.daycount) > 0) {
+        el.style.opacity = 0.5;
+        el.style.pointerEvents = 'none';
+      } else {
+        el.style.opacity = 1;
+        el.style.pointerEvents = 'auto';
+      }
+    });
+  }
+
+  #bankSelectClickHandler = (evt) => {
+    let percent = evt.target.dataset.percent;
+    let type = evt.target.dataset.type;
+    let durationName = evt.target.dataset.durationname;
+    let duration = evt.target.dataset.duration;
+    let daysCreditType = evt.target.dataset.dayscredittype;
+    this._callback.bankSelectClickHandler(evt, percent, type, durationName, duration, daysCreditType);
   }
 
   setBankCloseBtnHandler(callback) {
@@ -22,24 +43,15 @@ export class BankSelectedView extends AbstractView {
     document.addEventListener('keydown', this.#escKeydownBankSelectHandler);
   }
 
-
   #closeCarBtnClickHandler = (evt) => {
     this._callback.closeCarBtnClickHandler();
-  }
-
-
-  #bankSelectClickHandler = (evt) => {
-    if (evt.target.classList.contains('work-select-field')) {
-      this._callback.bankSelectClickHandler(evt.target);
-    }
   }
 
   #escKeydownBankSelectHandler = (evt) => {
     this._callback.escKeydownBankSelectHandler(evt);
   }
 
-
   get template() {
-    return createBankSelectTemplate();
+    return createBankSelectTemplate(this.#dataUser);
   }
 }
