@@ -41,6 +41,11 @@ export class WorkSelectFieldView extends AbstractView {
         el.style.pointerEvents = 'none';
       }
 
+      if (Number(this.#dataUser.proger) < Number(el.dataset.proger)) {
+        el.style.opacity = '0.5';
+        el.style.pointerEvents = 'none';
+      }
+
       if (this.#dataUser.work === el.dataset.property) {
         el.style.opacity = '0.5';
         el.style.pointerEvents = 'none';

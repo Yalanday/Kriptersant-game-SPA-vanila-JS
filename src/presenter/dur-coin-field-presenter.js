@@ -37,7 +37,7 @@ export default class DurCoinFieldPresenter {
     this.#durCoinSelectElement = new DurCoinSelectedView;
     render(this.#durCoinSelectElement, this.#container.element);
     this.#durCoinSelectElement.setDurCoinCloseBtnHandler(this.#handleCloseBtnDurCoinSelect);
-    this.#durCoinSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectDurCoin);
+    // this.#durCoinSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectDurCoin);
     addOverlay();
     this.#durCoinSelectElement.setDurCoinSelectHandler(this.#handleSelectDurCoin);
 

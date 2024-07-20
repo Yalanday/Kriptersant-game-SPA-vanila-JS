@@ -3,13 +3,11 @@ import {createWorkFieldTemplate} from "./templates/create-work-field-template";
 
 export class WorkFieldView extends AbstractView {
 
-  #dataWork = null;
-  #workForRender = null;
+  #dataUser = null;
 
-  constructor(dataWork, workForRender) {
+  constructor(dataUser) {
     super();
-    this.#dataWork = dataWork;
-    this.#workForRender = workForRender;
+    this.#dataUser = dataUser;
   }
 
   setWorkFieldHandler(callback) {
@@ -22,6 +20,6 @@ export class WorkFieldView extends AbstractView {
   }
 
   get template() {
-    return createWorkFieldTemplate(this.#workForRender);
+    return createWorkFieldTemplate(this.#dataUser);
   }
 }

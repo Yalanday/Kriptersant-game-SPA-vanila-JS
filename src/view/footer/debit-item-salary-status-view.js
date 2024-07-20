@@ -2,15 +2,15 @@ import AbstractView from "../../framework/view/abstract-view";
 import {createDebitItemSalaryTemplate} from "./templates/create-debit-item-salary-template";
 
 export default class DebitItemSalaryStatusView extends AbstractView {
-    #workForRender = null
+    #dataUser = null
 
-    constructor(workForRender) {
+    constructor(dataUser) {
         super();
-        this.#workForRender = workForRender;
+        this.#dataUser = dataUser;
     }
 
     get template() {
-        return createDebitItemSalaryTemplate(this.#workForRender)
+        return createDebitItemSalaryTemplate(this.#dataUser())
     }
 }
 

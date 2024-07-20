@@ -7,9 +7,15 @@ export class LoveSelectedView extends AbstractView {
     super();
   }
 
-  setLoveSelectHandler(callback) {
-    this._callback.loveSelectClickHandler = callback;
-    this.element.addEventListener('click', this.#loveSelectClickHandler);
+  setSelectLoveHandler(callback) {
+    this._callback.setSelectLoveHandler = callback;
+    this.element.querySelectorAll('.swiper-slide__description-container-button').forEach((el) => {
+      el.addEventListener('click', this.#setSelectLoveHandler)
+    });
+  }
+
+  #setSelectLoveHandler = (evt) => {
+    this._callback.setSelectLoveHandler(evt);
   }
 
   setLoveCloseBtnHandler(callback) {
@@ -24,17 +30,12 @@ export class LoveSelectedView extends AbstractView {
 
 
   #closeLoveBtnClickHandler = (evt) => {
-    this._callback.closeLoveBtnClickHandler();
-  }
-
-
-  #loveSelectClickHandler = (evt) => {
-    if (evt.target.classList.contains('work-select-field')) {
-      this._callback.loveSelectClickHandler(evt.target);
-    }
+    evt.preventDefault()
+    this._callback.closeLoveBtnClickHandler(evt);
   }
 
   #escKeydownLoveSelectHandler = (evt) => {
+    evt.preventDefault()
     this._callback.escKeydownLoveSelectHandler(evt);
   }
 

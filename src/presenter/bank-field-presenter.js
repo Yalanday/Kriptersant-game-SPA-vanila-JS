@@ -6,7 +6,7 @@ import {BankInputView} from "../view/head-field/bank-input-view";
 
 export default class BankFieldPresenter {
   #dataUser = null;
-  #element = null;
+  _element = null;
   #inputElement = null;
   #container = null;
   #setCurrentPropertyUser = null;
@@ -29,23 +29,23 @@ export default class BankFieldPresenter {
   }
 
   init() {
-    this.#element = new BankFieldView;
-    render(this.#element, this.#container.element);
-    this.#element.setBankFieldHandler(this.#handleBankField);
+    this._element = new BankFieldView;
+    render(this._element, this.#container.element);
+    this._element.setBankFieldHandler(this.#handleBankField);
   }
 
   #handleBankField = () => {
     this.#bankSelectElement = new BankSelectedView(this.#dataUser());
     render(this.#bankSelectElement, this.#container.element);
     this.#bankSelectElement.setBankCloseBtnHandler(this.#handleCloseBtnBankSelect);
-    this.#bankSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectBank);
+    // this.#bankSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectBank);
     this.#bankSelectElement.setSelectBankHandler(this.#handleSelectBank);
     addOverlay();
   }
 
   #handleCloseBtnBankSelect = () => {
     remove(this.#bankSelectElement);
-    this.#element.setBankFieldHandler(this.#handleBankField);
+    this._element.setBankFieldHandler(this.#handleBankField);
     removeOverlay();
   }
 
@@ -53,7 +53,7 @@ export default class BankFieldPresenter {
     if (evt.key === 'Escape' && this.#inputElement === null || evt.key === 'Esc' && this.#inputElement === null) {
       evt.preventDefault();
       remove(this.#bankSelectElement);
-      this.#element.setBankFieldHandler(this.#handleBankField);
+      this._element.setBankFieldHandler(this.#handleBankField);
       document.removeEventListener('keydown', this.#onEscKeyDownForSelectBank);
       removeOverlay();
     }
@@ -64,16 +64,12 @@ export default class BankFieldPresenter {
     if (type === 'deposit') {
       this.#setCurrentPropertyUser(daysCreditType, Math.round(Number(input.dataset.result) / Number(duration) + Number(input.dataset.sum)));
       this.#setCurrentPropertyUser(durationName, Number(duration));
-
       this.#setDataMinusAllMoney(Math.round(Number(input.dataset.result)))
-      // this.#setDataPlusAllMoney(Math.round(Number(input.dataset.result) / Number(duration) + Number(input.dataset.sum)))
     }
 
     if (type === 'credit') {
       this.#setCurrentPropertyUser(daysCreditType, Math.round(Number(input.dataset.sum)));
       this.#setCurrentPropertyUser(durationName, Number(duration));
-
-      // this.#setDataMinusAllMoney(Math.round(Number(input.dataset.sum)))
       this.#setDataPlusAllMoney(Math.round(Number(input.dataset.result)))
     }
 
@@ -83,16 +79,15 @@ export default class BankFieldPresenter {
     remove(this.#inputElement);
     this.#inputElement = null;
     elementForBlock.style.pointerEvents = 'none';
-    elementForBlock.style.opacity= '0.5';
+    elementForBlock.style.opacity = '0.5';
   }
 
   #handleInputBankCloseButton = (evt) => {
-    console.log('input button close')
     remove(this.#inputElement);
     this.#inputElement = null;
   }
 
-  #habdleInputBankChangeInput = (evt, valueCreditElement, enterButton, type, percent, durationName, duration) => {
+  #handleInputBankChangeInput = (evt, valueCreditElement, enterButton, type, percent, durationName, duration) => {
     let valueSum;
     let valueResult = Math.round(Number(evt.target.value));
     evt.target.dataset.result = String(valueResult);
@@ -126,6 +121,6 @@ export default class BankFieldPresenter {
     render(this.#inputElement, this.#container.element)
     this.#inputElement.setBankInputHandlerEnter(this.#handleInputBankEnterButton)
     this.#inputElement.setBankInputHandlerClose(this.#handleInputBankCloseButton)
-    this.#inputElement.setBankInputChange(this.#habdleInputBankChangeInput)
+    this.#inputElement.setBankInputChange(this.#handleInputBankChangeInput)
   }
 }

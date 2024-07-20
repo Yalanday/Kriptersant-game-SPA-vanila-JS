@@ -2,7 +2,6 @@ import {render, replace, remove} from "../framework/render";
 import {WorkFieldView} from "../view/head-field/work-field-view";
 import {WorkSelectFieldView} from "../view/head-field/work-select-field-view";
 import {addOverlay, removeOverlay} from "../utils/utils";
-import DebitItemSalaryStatusView from "../view/footer/debit-item-salary-status-view";
 
 export default class WorkFieldPresenter {
   #dataUser = null;
@@ -13,15 +12,17 @@ export default class WorkFieldPresenter {
   #workSelectElement = null;
   #setCurrentPropertyUser = null;
   #setSalaryForRender = null;
+  #setStatisticAllMoneyForDeposit = null;
 
 
-  constructor(dataUser, dataWork, container, siteMainElement, setCurrentPropertyUser, setSalaryForRender) {
+  constructor(dataUser, dataWork, container, siteMainElement, setCurrentPropertyUser, setSalaryForRender, setStatisticAllMoneyForDeposit) {
     this.#dataUser = dataUser;
     this.#dataWork = dataWork;
     this.#container = container;
     this.#siteMainElement = siteMainElement;
     this.#setCurrentPropertyUser = setCurrentPropertyUser;
     this.#setSalaryForRender = setSalaryForRender;
+    this.#setStatisticAllMoneyForDeposit = setStatisticAllMoneyForDeposit;
   }
 
   #workForRender = null;
@@ -34,18 +35,17 @@ export default class WorkFieldPresenter {
     } else {
       this.#workForRender = this.#dataWork[index].work
       this.#salaryForRender = this.#dataWork[index].salary;
-      let workFieldTempElement = new WorkFieldView(this.#dataWork, this.#dataWork[index].work);
-      // let salaryStatusTempElement = new DebitItemSalaryStatusView(this.#dataWork[index].salary);
+
+
+      let workFieldTempElement = new WorkFieldView(this.#dataUser(), this.#dataWork[index].work);
       replace(workFieldTempElement, this.#element);
-      // replace(salaryStatusTempElement, this.#salaryStatusElement);
       this.#element = workFieldTempElement;
-      // this.#salaryStatusElement = salaryStatusTempElement;
-      this.#setSalaryForRender(index)
+      this.#setSalaryForRender(index);
     }
   }
 
   init() {
-    this.#element = new WorkFieldView();
+    this.#element = new WorkFieldView(this.#dataUser());
     render(this.#element, this.#container.element);
     this.#element.setWorkFieldHandler(this.#handleWorkField);
   }
@@ -55,19 +55,29 @@ export default class WorkFieldPresenter {
     render(this.#workSelectElement, this.#siteMainElement);
     this.#workSelectElement.setWorkSelectHandler(this.#handleWorkSelect);
     this.#workSelectElement.setCloseBtnHandler(this.#handleCloseBtnWorkSelect);
-    this.#workSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectWork);
+    // this.#workSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectWork);
     addOverlay()
   }
 
   //выбор работы
   #handleWorkSelect = (index) => {
-    this.#setWorkSalaryForRender(index)
-    // this.#dataUser = {...this.#dataUser, salary: this.#salaryForRender};
     remove(this.#workSelectElement);
-    this.#setCurrentPropertyUser('work', this.#dataWork[index].work)
-    this.#setCurrentPropertyUser('salary', +this.#dataWork[index].salary)
+    this.#setCurrentPropertyUser('work', this.#dataWork[index].work);
+
+    if (this.#dataUser().salary > 0) {
+      let currentAllDeposit = Number(this.#dataUser().cryptansPlus);
+      this.#setCurrentPropertyUser('cryptansPlus', currentAllDeposit - Number(this.#dataUser().salary));
+    }
+
+    this.#setCurrentPropertyUser('salary', +this.#dataWork[index].salary);
+    this.#setWorkSalaryForRender();
+
+    this.#setStatisticAllMoneyForDeposit(+this.#dataWork[index].salary)
+
     this.#element.setWorkFieldHandler(this.#handleWorkField);
     removeOverlay();
+
+
   }
 
   //кнопка закрытия поля выбор работы

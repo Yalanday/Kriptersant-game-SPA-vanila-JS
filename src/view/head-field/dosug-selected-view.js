@@ -8,7 +8,14 @@ export class DosugSelectedView extends AbstractView {
 
   setDosugSelectHandler(callback) {
     this._callback.dosugSelectClickHandler = callback;
-    this.element.addEventListener('click', this.#dosugSelectClickHandler);
+
+    this.element.querySelectorAll('.work-select-field').forEach((el) => {
+      el.addEventListener('click', this.#dosugSelectClickHandler);
+    });
+  }
+
+  #dosugSelectClickHandler = (evt) => {
+      this._callback.dosugSelectClickHandler(evt.target);
   }
 
   setDosugCloseBtnHandler(callback) {
@@ -24,13 +31,6 @@ export class DosugSelectedView extends AbstractView {
 
   #closeDosugBtnClickHandler = (evt) => {
     this._callback.closeDosugBtnClickHandler();
-  }
-
-
-  #dosugSelectClickHandler = (evt) => {
-    if (evt.target.classList.contains('work-select-field')) {
-      this._callback.dosugSelectClickHandler(evt.target);
-    }
   }
 
   #escKeydownDosugSelectHandler = (evt) => {

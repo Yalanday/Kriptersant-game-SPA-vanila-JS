@@ -122,6 +122,81 @@ a:link {
     background-position: center;;
 }
 
+.header__data-buttons {
+    position: absolute;
+    right: 50px;
+    top: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+.data-button {
+    padding: 5px 10px;
+    background: none;
+    color: var(--text-color);
+    outline: none;
+    cursor: pointer;
+    border: 1px solid var(--text-color);
+    transition: all .2s ease-out;
+}
+
+.data-button:hover {
+    scale: 1.05;
+}
+
+.data-button:active {
+    opacity: 0.5;
+}
+
+.save-load-popup {
+    position: absolute;
+    width: 300px;
+    padding: 20px 40px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    z-index: 50;
+    border: 1px solid silver;
+    -webkit-box-shadow: 0 0 8px 3px rgba(184, 188, 191, 0.49);
+    -moz-box-shadow: 0 0 8px 3px rgba(184, 188, 191, 0.49);
+    box-shadow: 0 0 8px 3px rgba(184, 188, 191, 0.49);
+    background: #121213;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.save-load-popup-buttons {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.save-load-popup-button {
+    min-width: 40%;
+    padding: 10px 20px;
+    background: none;
+    color: var(--text-color);
+    outline: none;
+    cursor: pointer;
+    border: 1px solid var(--text-color);
+    -webkit-box-shadow: 0 0 4px 2px rgba(184, 188, 191, 0.49);
+    -moz-box-shadow: 0 0 4px 2px rgba(184, 188, 191, 0.49);
+    box-shadow: 0 0 4px 2px rgba(184, 188, 191, 0.49);
+    transition: all .2s ease-out;
+}
+
+.save-load-popup-button:hover {
+    scale: 1.1;
+}
+
+.save-load-popup-button:active {
+    opacity: 0.7;
+}
+
 .header__container {
     display: flex;
     align-items: flex-end;
@@ -329,6 +404,7 @@ a:link {
 
 .head-field__work-select-container--love {
     width: 80%;
+    transform: translate(-50%, 8%)
 }
 
 .work-select-field {
@@ -377,7 +453,7 @@ a:link {
 .footer__left-block,
 .footer__right-block {
     width: 50%;
-    padding: 0 20px;
+    padding: 0 5px;
 }
 
 .footer__title {
@@ -489,6 +565,30 @@ a:link {
     width: 600px;
 }
 
+.swiper-slide--love::before {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    content: "";
+    font-size: 20px;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    color: red;
+    width: 215px;
+    height: 200px;
+    background-image: url('../images/heart.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: 100;
+    display: none;
+}
+
+.swiper-slide--love.love::before {
+    display: flex;
+}
+
 .swiper-container img {
     width: 100%;
     height: 500px;
@@ -516,6 +616,9 @@ a:link {
     cursor: pointer;
     background: white;
     transition: all .2s ease-out;
+    z-index: 100;
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .swiper-slide__description-container-button:hover {
@@ -585,7 +688,7 @@ a:link {
     outline: none;
     border: 1px solid silver;
     cursor: pointer;
-    transition: all.2s ease-out;
+    transition: all .2s ease-out;
 }
 
 .bank-input-field-button:hover {
@@ -596,4 +699,5 @@ a:link {
     pointer-events: none;
     opacity: 0.5;
 }
+
 

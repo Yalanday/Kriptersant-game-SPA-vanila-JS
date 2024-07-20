@@ -3,6 +3,13 @@ export const dataUser = {
   gender: null,
   avatar: null,
 
+  //саморазвитие
+  books: 0,
+  biceps: 20,
+  carma: 0,
+  proger: 0,
+  dosugCount: 0,
+
   // место работы
   work: '',
 

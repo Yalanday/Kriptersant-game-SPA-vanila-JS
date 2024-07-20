@@ -24,7 +24,7 @@ export default class CarFieldPresenter {
   }
 
   init() {
-    this.#element = new CarFieldView;
+    this.#element = new CarFieldView(this.#dataUser());
     render(this.#element, this.#container.element);
     this.#element.setCarFieldHandler(this.#handleCarField);
   }
@@ -33,7 +33,7 @@ export default class CarFieldPresenter {
     this.#carSelectElement = new CarSelectedView(this.#dataUser(), this.#dataCar);
     render(this.#carSelectElement, this.#container.element);
     this.#carSelectElement.setCarCloseBtnHandler(this.#handleCloseBtnCarSelect);
-    this.#carSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectCar);
+    // this.#carSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectCar);
     this.#carSelectElement.setSelectCarHandler(this.#handleSelectCar);
     addOverlay();
   }
@@ -58,16 +58,14 @@ export default class CarFieldPresenter {
 
     remove(this.#carSelectElement);
     this.#element.setCarFieldHandler(this.#handleCarField);
-    let newElement = new CarFieldView(evt.dataset.model);
-    replace(newElement, this.#element);
-    this.#element = newElement;
-    this.#element.setCarFieldHandler(this.#handleCarField);
-    this.#MinusAllMoney(Number(evt.dataset.price));
     this.#setterCarForDataUser('car', evt.dataset.model);
     this.#setterCarForDataUser('carCredit', +evt.dataset.expenses);
+    this.#element.setCarFieldHandler(this.#handleCarField);
+    this.#MinusAllMoney(Number(evt.dataset.price));
     this.#setCreditItemCarCreditValue();
-    console.log(this.#dataUser())
+    let newElement = new CarFieldView(this.#dataUser());
+    replace(newElement, this.#element);
+    this.#element = newElement;
     removeOverlay();
-
   }
 }

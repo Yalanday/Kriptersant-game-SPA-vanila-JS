@@ -26,7 +26,7 @@ export default class HomeFieldPresenter {
   }
 
   init() {
-    this.#element = new HomeFieldView;
+    this.#element = new HomeFieldView(this.#dataUser());
     render(this.#element, this.#container.element);
     this.#element.setHomeFieldHandler(this.#handleHomeField);
   }
@@ -35,7 +35,7 @@ export default class HomeFieldPresenter {
     this.#homeSelectElement = new HomeSelectedView(this.#dataUser(), this.#dataHome, this.#minusAllMoney);
     render(this.#homeSelectElement, this.#container.element);
     this.#homeSelectElement.setHomeCloseBtnHandler(this.#handleCloseBtnHomeSelect);
-    this.#homeSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectHome);
+    // this.#homeSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectHome);
     this.#homeSelectElement.setHomeSelectHandler(this.#handleSelectHome);
     addOverlay();
   }
@@ -60,14 +60,16 @@ export default class HomeFieldPresenter {
 
     remove(this.#homeSelectElement);
     this.#element.setHomeFieldHandler(this.#handleHomeField);
-    let newElement = new HomeFieldView(evt.dataset.model);
-    replace(newElement, this.#element);
-    this.#element = newElement;
     this.#element.setHomeFieldHandler(this.#handleHomeField);
     this.#minusAllMoney(Number(evt.dataset.price));
     this.#setterHomeForDataUser('home', evt.dataset.model);
     this.#setterHomeForDataUser('homeCredit', +evt.dataset.expenses);
     this.#setCreditItemHomeCreditValue();
+
+    let newElement = new HomeFieldView(this.#dataUser());
+    replace(newElement, this.#element);
+    this.#element = newElement;
+
     removeOverlay();
 
     console.log(this.#dataUser())

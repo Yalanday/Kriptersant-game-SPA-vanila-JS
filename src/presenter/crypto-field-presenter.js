@@ -45,7 +45,7 @@ export default class CryptoFieldPresenter {
     this.#cryptoSelectElement = new CryptoSelectedView(this.#configChart);
     render(this.#cryptoSelectElement, this.#container.element);
     this.#cryptoSelectElement.setCryptoCloseBtnHandler(this.#handleCloseBtnCryptoSelect);
-    this.#cryptoSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectCrypto);
+    // this.#cryptoSelectElement.setEscKeydownHandler(this.#onEscKeyDownForSelectCrypto);
     this.#cryptoSelectElement.setSelectCryptoHandler(this.#handleSelectCrypto);
     addOverlay();
   }

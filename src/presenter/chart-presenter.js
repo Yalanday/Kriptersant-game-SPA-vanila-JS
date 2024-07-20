@@ -18,6 +18,10 @@ export default class ChartPresenter {
     this.#container = container;
   }
 
+  removeChart() {
+    remove(this.#element);
+  }
+
   init() {
     this.#configChart = configChart;
     this.#element = new FooterChartView;
