@@ -66,6 +66,7 @@ export default class CarFieldPresenter {
     let newElement = new CarFieldView(this.#dataUser());
     replace(newElement, this.#element);
     this.#element = newElement;
+    this.#element.setCarFieldHandler(this.#handleCarField);
     removeOverlay();
   }
 }

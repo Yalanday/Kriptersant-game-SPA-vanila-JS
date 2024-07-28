@@ -19,7 +19,7 @@ export const dataUser = {
   // зарплата в день
   salary: 0,
   // общий баланс
-  cryptans: 10000,
+  cryptans: 5000,
   cryptansPlus: 0,
 
   // балансы крипты

@@ -69,6 +69,7 @@ export default class HomeFieldPresenter {
     let newElement = new HomeFieldView(this.#dataUser());
     replace(newElement, this.#element);
     this.#element = newElement;
+    this.#element.setHomeFieldHandler(this.#handleHomeField);
 
     removeOverlay();
 

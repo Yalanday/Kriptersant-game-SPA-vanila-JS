@@ -1,8 +1,8 @@
 const dataBank = [
-    {name: 'Вклад 3 дня', percent: 15, index: 0, url: 'vklad.jpg', type: 'deposit' , durationName: 'bankDeposit3DayCount', duration: 3, daysCreditType: 'bankDeposit3dSum'},
-    {name: 'Вклад 10 дней', percent: 25, index: 0, url: 'vklad.jpg', type: 'deposit', durationName: 'bankDeposit10DayCount', duration: 10, daysCreditType: 'bankDeposit10dSum'},
-    {name: 'Кредит 3 дня', percent: 20, index: 1, url: 'credit.jpg', type: 'credit', durationName: 'bankCredit3DayCount',  duration: 3, daysCreditType: 'bankCredit3dSum'},
-    {name: 'Кредит 10 дней', percent: 10, index: 1, url: 'credit.jpg', type: 'credit', durationName:'bankCredit10DayCount', duration: 10, daysCreditType: 'bankCredit10dSum'},
+    {name: 'Вклад 3 дня', percent: 2, index: 0, url: 'vklad.jpg', type: 'deposit' , durationName: 'bankDeposit3DayCount', duration: 3, daysCreditType: 'bankDeposit3dSum'},
+    {name: 'Вклад 10 дней', percent: 3, index: 0, url: 'vklad.jpg', type: 'deposit', durationName: 'bankDeposit10DayCount', duration: 10, daysCreditType: 'bankDeposit10dSum'},
+    {name: 'Кредит 3 дня', percent: 8, index: 1, url: 'credit.jpg', type: 'credit', durationName: 'bankCredit3DayCount',  duration: 3, daysCreditType: 'bankCredit3dSum'},
+    {name: 'Кредит 10 дней', percent: 6, index: 1, url: 'credit.jpg', type: 'credit', durationName:'bankCredit10DayCount', duration: 10, daysCreditType: 'bankCredit10dSum'},
     // {name: 'Рабатека', percent: 17, index: 2, url: 'ipoteka.jpg', type: 'ipoteka', duration: 10},
     // {name: 'Автокред', percent: 14, index: 2, url: 'avtocred.jpg', type: 'autoCredit' , duration: 10},
 ];

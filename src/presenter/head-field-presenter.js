@@ -133,7 +133,8 @@ export default class HeadFieldPresenter {
 
   #setDataPlusAllMoney = (sumPlus = 0) => {
     let currentCryptans = this.#dataUser.cryptans;
-    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans + Number(sumPlus)}
+    let salary = this.#dataUser.salary;
+    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans + Number(sumPlus) - salary}
     this.#setStatisticAllMoney()
   }
 
@@ -194,14 +195,11 @@ export default class HeadFieldPresenter {
 
   //актуализация статистики баланса
   #setStatisticAllMoney() {
+    console.log(this.#dataUser)
     let currentCryptans = this.#dataUser.cryptans;
     let currentSalaty = this.#dataUser.salary;
 
-    // console.log(currentSalaty)
-    // console.log(this.#actualDataUser().salary)
-
     if (currentSalaty > 0) {
-      console.log('>')
       let currentcryptanPlus = this.#dataUser.cryptansPlus;
       this.#dataUser = {...this.#dataUser, cryptansPlus: currentcryptanPlus - currentSalaty};
       this.#dataUser = {...this.#dataUser, cryptans: currentCryptans - currentSalaty};
@@ -219,8 +217,10 @@ export default class HeadFieldPresenter {
     let allCredit = currentCarCredit + currentHomeCredit + current3dayCredit + current10dayCredit + currentLoveCredit;
     let allDeposit = bankDeposit3dSum + bankDeposit10dSum;
 
-    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans + currentSalaty - allCredit + allDeposit};
     this.#dataUser = {...this.#dataUser, cryptansPlus: allDeposit + currentSalaty};
+    let cryptansPlusData =  this.#dataUser.cryptansPlus;
+
+    this.#dataUser = {...this.#dataUser, cryptans: currentCryptans + currentSalaty - allCredit + allDeposit + cryptansPlusData};
     console.log(this.#dataUser)
 
     let statisticAllMoneyTempElement = new DebitItemCryptansStatusView(this.#dataUser);
